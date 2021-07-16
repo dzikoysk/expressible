@@ -1,16 +1,17 @@
 # Expressible
-Utility library dedicated for functional codebases that require enhanced response handling.
-Express yourself with inspired by Rust std wrappers and provide better API using a tiny `expressible` library.    
+Utility library, part of the panda-lang SDK, dedicated for functional codebases that require enhanced response handling.
+Express yourself with inspired by Rust & Kotlin wrappers to provide better API using this tiny library.
 
 <hr>
 
 Supported wrappers:
-* Option
 * Result
+* Option
 * Lazy
+* Mono, Pair, Triple, Quad
+* Throwing functions, runnables, suppliers and consumers
 * Completable
 * PandaStream
-* Throwing functions
 
 <hr>
 
@@ -18,7 +19,7 @@ Supported wrappers:
 <dependency>
     <groupId>org.panda-lang</groupId>
     <artifactId>expressible</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>>
 ```
 
