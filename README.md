@@ -1,4 +1,4 @@
-# Expressible [![CI](https://github.com/panda-lang/expressible/actions/workflows/maven.yml/badge.svg)](https://github.com/panda-lang/expressible/actions/workflows/maven.yml)
+# Expressible [![CI](https://github.com/panda-lang/expressible/actions/workflows/maven.yml/badge.svg)](https://github.com/panda-lang/expressible/actions/workflows/maven.yml) [![codecov](https://codecov.io/gh/panda-lang/expressible/branch/main/graph/badge.svg?token=LI1PAPD6NM)](https://codecov.io/gh/panda-lang/expressible)
 Utility library, part of the panda-lang SDK, dedicated for functional codebases that require enhanced response handling.
 Express yourself with inspired by Rust & Kotlin wrappers to provide better API using this tiny library.
 
