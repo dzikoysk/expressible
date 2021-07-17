@@ -4,14 +4,15 @@ Express yourself with inspired by Rust & Kotlin wrappers to provide better API u
 
 <hr>
 
-Supported wrappers:
-* Result
-* Option
-* Lazy
-* Mono, Pair, Triple, Quad
+Supported wrappers (in `panda.std.*` package):
+* `Result<Value, Error>`
+* `Option<Value>`
+* `Lazy<Value>`
+* `Mono<A>`, `Pair<A, B>`, `Triple<A, B, C>`, `Quad<A, B, C, D>`
+* `Completable<Value>` with `Publisher & Subscriber` pattern
 * Throwing functions, runnables, suppliers and consumers
-* Completable
-* PandaStream
+* Tri and Quad consumers, functions and predicates 
+* `PandaStream<Value>` 
 
 <hr>
 

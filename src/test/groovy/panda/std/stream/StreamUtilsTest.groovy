@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 import static org.junit.jupiter.api.Assertions.assertEquals
 import static org.junit.jupiter.api.Assertions.assertTrue
 
-// @CompileStatic
+@CompileStatic
 final class StreamUtilsTest {
 
     private static final Collection<Integer> COLLECTION = Arrays.asList(5, 2, 5)
