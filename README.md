@@ -19,7 +19,7 @@ Supported wrappers:
 <dependency>
     <groupId>org.panda-lang</groupId>
     <artifactId>expressible</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>>
 ```
 
