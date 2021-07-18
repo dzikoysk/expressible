@@ -23,59 +23,72 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class Result<V, E>  {
+public class Result<VALUE, ERROR>  {
 
-    private final V value;
-    private final E error;
+    private final VALUE value;
+    private final ERROR error;
 
-    private Result(@Nullable V value, @Nullable E error) {
+    private Result(@Nullable VALUE value, @Nullable ERROR error) {
         this.value = value;
         this.error = error;
     }
 
-    public static <V, E> Result<V, E> ok(V value) {
+    public static <VALUE, ERROR> Result<VALUE, ERROR> ok(VALUE value) {
         return new Result<>(value, null);
     }
 
-    public static <V, E> Result<V, E> error(E err) {
+    public static <VALUE, ERROR> Result<VALUE, ERROR> error(ERROR err) {
         return new Result<>(null, err);
     }
 
-    public static <V, E> Result<V, E> when(boolean condition, Supplier<V> value, Supplier<E> err) {
-        return condition ? Result.ok(value.get()) : Result.error(err.get());
+    public static <VALUE, ERROR> Result<VALUE, ERROR> when(boolean condition, Supplier<VALUE> value, Supplier<ERROR> err) {
+        return condition ? ok(value.get()) : error(err.get());
     }
 
-    public static <V, E> Result<V, E> when(boolean condition, V value, E err) {
-        return condition ? Result.ok(value) : Result.error(err);
+    public static <VALUE, ERROR> Result<VALUE, ERROR> when(boolean condition, VALUE value, ERROR err) {
+        return condition ? ok(value) : error(err);
     }
 
-    public <R> R merge(Function<V, R> valueMerge, Function<E, R> errorMerge) {
+    public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> map(Function<VALUE, MAPPED_VALUE> function) {
+        return isOk() ? ok(function.apply(value)) : error(error);
+    }
+
+    public <MAPPED_ERROR> Result<VALUE, MAPPED_ERROR> mapErr(Function<ERROR, MAPPED_ERROR> function) {
+        return isOk() ? ok(value) : error(function.apply(error));
+    }
+
+    public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> flatMap(Function<VALUE, Result<MAPPED_VALUE, ERROR>> function) {
+        return isOk() ? function.apply(value) : error(error);
+    }
+
+    public Result<VALUE, ERROR> filter(Predicate<VALUE> filter, Supplier<ERROR> errorSupplier) {
+        return isOk() && !filter.test(value) ? error(errorSupplier.get()) : this;
+    }
+
+    public <COMMON> COMMON merge(Function<VALUE, COMMON> valueMerge, Function<ERROR, COMMON> errorMerge) {
         return isOk() ? valueMerge.apply(get()) : errorMerge.apply(getError());
     }
 
-    public <R> Result<R, E> map(Function<V, R> function) {
-        return isOk() ? Result.ok(function.apply(value)) : Result.error(error);
+    public <REQUIRED_VALUE> Result<REQUIRED_VALUE, ERROR> projectToError() {
+        if (isOk()) {
+            throw new IllegalStateException("Cannot project result with value to error");
+        }
+
+        return error(error);
     }
 
-    public <R> Result<V, R> mapErr(Function<E, R> function) {
-        return isOk() ? Result.ok(value) : Result.error(function.apply(error));
-    }
-
-    public <R> Result<R, E> flatMap(Function<V, Result<R, E>> function) {
-        return isOk() ? function.apply(value) : Result.error(error);
-    }
-
-    public Result<V, E> orElse(Function<E, Result<V, E>> orElse) {
+    public Result<VALUE, ERROR> orElse(Function<ERROR, Result<VALUE, ERROR>> orElse) {
         return isOk() ? this : orElse.apply(error);
     }
 
-    public V orElseGet(Function<E, V> orElse) {
+    public VALUE orElseGet(Function<ERROR, VALUE> orElse) {
         return isOk() ? value : orElse.apply(error);
     }
 
-    public <T extends Exception> V orElseThrow(ThrowingFunction<E, T, T> consumer) throws T {
+    public <T extends Exception> VALUE orElseThrow(ThrowingFunction<ERROR, T, T> consumer) throws T {
         if (isOk()) {
             return get();
         }
@@ -83,7 +96,7 @@ public class Result<V, E>  {
         throw consumer.apply(getError());
     }
 
-    public Result<V, E> peek(Consumer<V> consumer) {
+    public Result<VALUE, ERROR> peek(Consumer<VALUE> consumer) {
         if (isOk()) {
             consumer.accept(value);
         }
@@ -91,7 +104,7 @@ public class Result<V, E>  {
         return this;
     }
 
-    public Result<V, E> onError(Consumer<E> consumer) {
+    public Result<VALUE, ERROR> onError(Consumer<ERROR> consumer) {
         if (isErr()) {
             consumer.accept(error);
         }
@@ -107,7 +120,7 @@ public class Result<V, E>  {
         return error != null;
     }
 
-    public V get() {
+    public VALUE get() {
         if (isErr()) {
             throw new NoSuchElementException("No value present");
         }
@@ -115,7 +128,7 @@ public class Result<V, E>  {
         return value;
     }
 
-    public E getError() {
+    public ERROR getError() {
         if (isOk()) {
             throw new NoSuchElementException("No error present");
         }
@@ -128,15 +141,15 @@ public class Result<V, E>  {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getAnyAs() {
-        return (T) getAny();
+    public <AS> AS getAnyAs() {
+        return (AS) getAny();
     }
 
-    public Option<V> toOption() {
+    public Option<VALUE> toOption() {
         return Option.of(value);
     }
 
-    public @Nullable V orNull() {
+    public @Nullable VALUE orNull() {
         return value;
     }
 
