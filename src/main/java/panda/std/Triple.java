@@ -16,6 +16,8 @@
 
 package panda.std;
 
+import java.util.Objects;
+
 public class Triple<A, B, C> {
 
     private final A first;
@@ -46,6 +48,28 @@ public class Triple<A, B, C> {
 
     public C getThird() {
         return third;
+    }
+
+    @Override
+    public boolean equals(Object to) {
+        if (this == to) {
+            return true;
+        }
+
+        if (to == null || getClass() != to.getClass()) {
+            return false;
+        }
+
+        Triple<?, ?, ?> triple = (Triple<?, ?, ?>) to;
+
+        return Objects.equals(first, triple.first)
+                && Objects.equals(second, triple.second)
+                && Objects.equals(third, triple.third);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second, third);
     }
 
     @Override

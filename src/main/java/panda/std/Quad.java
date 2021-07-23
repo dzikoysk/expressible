@@ -16,6 +16,8 @@
 
 package panda.std;
 
+import java.util.Objects;
+
 public class Quad<A, B, C, D> {
 
     private final A first;
@@ -48,6 +50,29 @@ public class Quad<A, B, C, D> {
 
     public D getFourth() {
         return fourth;
+    }
+
+    @Override
+    public boolean equals(Object to) {
+        if (this == to) {
+            return true;
+        }
+
+        if (to == null || getClass() != to.getClass()) {
+            return false;
+        }
+
+        Quad<?, ?, ?, ?> quad = (Quad<?, ?, ?, ?>) to;
+
+        return Objects.equals(first, quad.first)
+                && Objects.equals(second, quad.second)
+                && Objects.equals(third, quad.third)
+                && Objects.equals(fourth, quad.fourth);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second, third, fourth);
     }
 
     @Override

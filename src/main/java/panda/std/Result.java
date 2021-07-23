@@ -165,14 +165,11 @@ public class Result<VALUE, ERROR>  {
 
         Result<?, ?> other = (Result<?, ?>) to;
         return Objects.equals(value, other.value) && Objects.equals(error, other.error);
-
     }
 
     @Override
     public int hashCode() {
-        int result = value != null ? value.hashCode() : 0;
-        result = 31 * result + (error != null ? error.hashCode() : 0);
-        return result;
+        return Objects.hash(value, error);
     }
 
     @Override

@@ -23,32 +23,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals
 import static org.junit.jupiter.api.Assertions.assertNotEquals
 
 @CompileStatic
-final class PairTest {
+final class QuadTest {
 
-    private final Pair<String, Double> pair = Pair.of('test', 7.0D)
+    private final Quad<String, String, String, String> quad = Quad.of('test', 'test', 'test', 'test')
 
     @Test
     void 'should keep order of associated values' () {
-        assertEquals 'test', pair.getFirst()
-        assertEquals 7.0D, pair.getSecond()
+        assertEquals 'test', quad.getFirst()
+        assertEquals 'test', quad.getSecond()
+        assertEquals 'test', quad.getThird()
+        assertEquals 'test', quad.getFourth()
     }
 
     @Test
     void 'should display formatted values' () {
-        assertEquals  "['test', '7.0']", pair.toString()
+        assertEquals  "['test', 'test', 'test', 'test']", quad.toString()
     }
 
     @Test
     void 'should support equals & hashcode' () {
-        assertEquals pair, pair
+        assertEquals quad, quad
 
-        def same = Pair.of('test', 7.0D)
-        assertEquals same, pair
-        assertEquals same.hashCode(), pair.hashCode()
+        def same = Quad.of('test', 'test', 'test', 'test')
+        assertEquals same, quad
+        assertEquals same.hashCode(), quad.hashCode()
 
-        def different = Pair.of('other', 0)
-        assertNotEquals different, pair
-        assertNotEquals different.hashCode(), pair.hashCode()
+        def different = Quad.of('other', 'other', 'other', 'other')
+        assertNotEquals different, quad
+        assertNotEquals different.hashCode(), quad.hashCode()
     }
 
 }

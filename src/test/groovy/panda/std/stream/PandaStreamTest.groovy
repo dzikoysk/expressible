@@ -83,15 +83,11 @@ class PandaStreamTest {
     @Test
     void count() {
         assertEquals 3, PandaStream.of(VALUES).count()
-    }
-
-    @Test
-    void testCount() {
         assertEquals 1, PandaStream.of(VALUES).count({ value -> value == "2" })
     }
 
     @Test
-    void testTakeWhile() {
+    void takeWhile() {
         assertArrayEquals([1, 2] as Integer[], PandaStream.of(1, 2, 3, 4, 5)
                 .takeWhile(i -> i < 3)
                 .toArray({ length -> new Integer[length] } as IntFunction))
@@ -110,6 +106,11 @@ class PandaStreamTest {
     void of() {
         Stream<String> stream = VALUES.stream()
         assertEquals stream, PandaStream.of(stream).toStream()
+    }
+
+    @Test
+    void empty() {
+        assertTrue PandaStream.empty().toList().isEmpty()
     }
 
 }

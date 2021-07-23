@@ -18,7 +18,6 @@ package panda.std
 
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
-import panda.std.Lazy
 
 import java.util.function.Supplier
 
@@ -27,16 +26,20 @@ import static org.junit.jupiter.api.Assertions.*
 @CompileStatic
 final class LazyTest {
 
+    private final Lazy<Object> lazy = new Lazy<>({ new Object() } as Supplier)
+
     @Test
-    void isInitialized() {
-        Lazy<Object> lazy = new Lazy<>({ new Object() } as Supplier)
+    void 'should be initialized after first get' () {
         assertFalse lazy.isInitialized()
-
-        Object a = lazy.get()
-        Object b = lazy.get()
-        assertSame a, b
-
+        lazy.get()
         assertTrue lazy.isInitialized()
+    }
+
+    @Test
+    void 'should return the same value every time' () {
+        def firstGet = lazy.get()
+        def secondGet = lazy.get()
+        assertSame firstGet, secondGet
     }
 
 }

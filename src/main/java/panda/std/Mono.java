@@ -16,6 +16,8 @@
 
 package panda.std;
 
+import java.util.Objects;
+
 public class Mono<A> {
 
     protected final A first;
@@ -34,6 +36,25 @@ public class Mono<A> {
 
     public A getFirst() {
         return first;
+    }
+
+    @Override
+    public boolean equals(Object to) {
+        if (this == to) {
+            return true;
+        }
+
+        if (to == null || getClass() != to.getClass()) {
+            return false;
+        }
+
+        Mono<?> toMono = (Mono<?>) to;
+        return Objects.equals(first, toMono.first);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first);
     }
 
     @Override

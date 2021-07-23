@@ -23,32 +23,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals
 import static org.junit.jupiter.api.Assertions.assertNotEquals
 
 @CompileStatic
-final class PairTest {
+final class TripleTest {
 
-    private final Pair<String, Double> pair = Pair.of('test', 7.0D)
+    private final Triple<String, String, String> triple = Triple.of('test', 'test', 'test')
 
     @Test
     void 'should keep order of associated values' () {
-        assertEquals 'test', pair.getFirst()
-        assertEquals 7.0D, pair.getSecond()
+        assertEquals 'test', triple.getFirst()
+        assertEquals 'test', triple.getSecond()
+        assertEquals 'test', triple.getThird()
     }
 
     @Test
     void 'should display formatted values' () {
-        assertEquals  "['test', '7.0']", pair.toString()
+        assertEquals  "['test', 'test', 'test']", triple.toString()
     }
 
     @Test
     void 'should support equals & hashcode' () {
-        assertEquals pair, pair
+        assertEquals triple, triple
 
-        def same = Pair.of('test', 7.0D)
-        assertEquals same, pair
-        assertEquals same.hashCode(), pair.hashCode()
+        def same = Triple.of('test', 'test', 'test')
+        assertEquals same, triple
+        assertEquals same.hashCode(), triple.hashCode()
 
-        def different = Pair.of('other', 0)
-        assertNotEquals different, pair
-        assertNotEquals different.hashCode(), pair.hashCode()
+        def different = Triple.of('other', 'other', 'other')
+        assertNotEquals different, triple
+        assertNotEquals different.hashCode(), triple.hashCode()
     }
 
 }

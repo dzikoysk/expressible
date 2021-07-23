@@ -16,6 +16,8 @@
 
 package panda.std;
 
+import java.util.Objects;
+
 public class Pair<A, B> {
 
     protected final A first;
@@ -40,6 +42,25 @@ public class Pair<A, B> {
 
     public B getSecond() {
         return second;
+    }
+
+    @Override
+    public boolean equals(Object to) {
+        if (this == to) {
+            return true;
+        }
+
+        if (to == null || getClass() != to.getClass()) {
+            return false;
+        }
+
+        Pair<?, ?> pair = (Pair<?, ?>) to;
+        return Objects.equals(first, pair.first) && Objects.equals(second, pair.second);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
     }
 
     @Override

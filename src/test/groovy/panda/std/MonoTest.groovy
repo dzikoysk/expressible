@@ -23,32 +23,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals
 import static org.junit.jupiter.api.Assertions.assertNotEquals
 
 @CompileStatic
-final class PairTest {
+final class MonoTest {
 
-    private final Pair<String, Double> pair = Pair.of('test', 7.0D)
+    private final Mono<String> mono = Mono.of('test')
 
     @Test
     void 'should keep order of associated values' () {
-        assertEquals 'test', pair.getFirst()
-        assertEquals 7.0D, pair.getSecond()
+        assertEquals 'test', mono.getFirst()
     }
 
     @Test
     void 'should display formatted values' () {
-        assertEquals  "['test', '7.0']", pair.toString()
+        assertEquals  "['test']", mono.toString()
     }
 
     @Test
     void 'should support equals & hashcode' () {
-        assertEquals pair, pair
+        assertEquals mono, mono
 
-        def same = Pair.of('test', 7.0D)
-        assertEquals same, pair
-        assertEquals same.hashCode(), pair.hashCode()
+        def same = Mono.of('test')
+        assertEquals same, mono
+        assertEquals same.hashCode(), mono.hashCode()
 
-        def different = Pair.of('other', 0)
-        assertNotEquals different, pair
-        assertNotEquals different.hashCode(), pair.hashCode()
+        def different = Mono.of('other')
+        assertNotEquals different, mono
+        assertNotEquals different.hashCode(), mono.hashCode()
     }
 
 }
