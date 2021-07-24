@@ -174,7 +174,7 @@ public class Result<VALUE, ERROR>  {
 
     @Override
     public String toString() {
-        return "Result{" + (isOk() ? "VALUE=" + value : "ERR=" + error);
+        return "Result{" + (isOk() ? "VALUE=" + value : "ERR=" + error) + "}";
     }
 
 }

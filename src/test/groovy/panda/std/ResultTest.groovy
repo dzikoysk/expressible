@@ -18,67 +18,146 @@ package panda.std
 
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
-import panda.std.Result
+import org.junit.jupiter.api.function.Executable
+import panda.std.function.ThrowingFunction
 
 import java.util.concurrent.atomic.AtomicInteger
 
 import static org.junit.jupiter.api.Assertions.*
+import static panda.std.Result.error
+import static panda.std.Result.ok
 
 @CompileStatic
 final class ResultTest {
 
     @Test
     void 'should map value' () {
-        assertEquals(7, Result.ok("7").map(value -> Integer.parseInt(value)).get())
+        assertEquals(7, ok("7").map(value -> Integer.parseInt(value)).get())
     }
 
     @Test
     void 'should return alternative result if errored' () {
-        assertEquals(7, Result.error(-1).orElse(err -> Result.ok(7)).get())
+        assertEquals(7, error(-1).orElse(err -> ok(7)).get())
     }
 
     @Test
     void 'should return alternative value if errored' () {
-        assertEquals(7, Result.error(-1).orElseGet(err -> 7))
+        assertEquals(7, error(-1).orElseGet(err -> 7))
     }
 
     @Test
     void 'should evaluate error closure if errored' () {
         def integer = new AtomicInteger(-1)
-        Result.error(integer.get()).onError(err -> integer.set(Math.abs(err)))
+        error(integer.get()).onError(err -> integer.set(Math.abs(err)))
         assertEquals(1, integer.get())
     }
 
     @Test
     void 'should return proper ok status' () {
-        assertTrue(Result.ok("ok").isOk())
-        assertFalse(Result.error("err").isOk())
+        assertTrue(ok("ok").isOk())
+        assertFalse(error("err").isOk())
     }
 
     @Test
     void 'should return result value' () {
-        assertEquals("value", Result.ok("value").get())
+        assertEquals("value", ok("value").get())
     }
 
     @Test
     void 'should return proper error status' () {
-        assertTrue(Result.error("err").isErr())
-        assertFalse(Result.ok("ok").isErr())
+        assertTrue(error("err").isErr())
+        assertFalse(ok("ok").isErr())
     }
 
     @Test
     void 'should return error value' () {
-        assertEquals("err", Result.error("err").getError())
+        assertEquals("err", error("err").getError())
     }
 
     @Test
-    void 'should be equal' () {
-        def res1 = Result.ok("test")
-        def res2 = Result.ok("another-test")
-        def res3 = Result.ok("test")
+    void 'should support equals & hashcode' () {
+        def base = ok("test")
+        assertEquals base, base
+        assertEquals base.hashCode(), base.hashCode()
 
-        assertTrue res1 == res3
-        assertFalse res1 == res2
+        def same = ok("test")
+        assertEquals base, same
+        assertEquals base.hashCode(), same.hashCode()
+
+        def different = ok("different")
+        assertNotEquals base, different
+        assertNotEquals base.hashCode(), different.hashCode()
+    }
+
+    @Test
+    void 'should throw exception during an attempt of getting value from result representing error' () {
+        assertThrows(NoSuchElementException.class, { error("Error").get() })
+    }
+
+    @Test
+    void 'should return value or error as any value' () {
+        assertEquals 'any', ok('any').getAnyAs()
+        assertEquals 'any', error('any').getAnyAs()
+    }
+
+    @Test
+    void 'should map result to option' () {
+        assertEquals Option.of('value'), ok('value').toOption()
+        assertEquals Option.none(), error('error').toOption()
+    }
+
+    @Test
+    void 'should return null for orNull() in case of error' () {
+        assertNull error('error').orNull()
+    }
+
+    @Test
+    void 'should display formatted content through toString()' () {
+        assertEquals 'Result{VALUE=value}', ok('value').toString()
+        assertEquals 'Result{ERR=error}', error('error').toString()
+    }
+
+    @Test
+    void 'should execute closure if ok' ()  {
+        def status = false
+
+        error(this).peek({ status = true })
+        assertFalse status
+
+        ok(this).peek({ status = true })
+        assertTrue status
+    }
+
+    @Test
+    void 'should throw if requested if result contains error' () {
+        assertDoesNotThrow({ ok('value').orElseThrow({ new IllegalStateException() }) } as Executable)
+        assertThrows(IllegalStateException.class, { error("error").orElseThrow({ new IllegalStateException() })} )
+    }
+
+    @Test
+    void 'should filter value and return error if needed' () {
+        assertEquals 'error', ok('value').filter({ false }, { 'error' }).getError()
+    }
+
+    @Test
+    void 'should flat map result value' () {
+        assertEquals 'flat', ok('flat').flatMap(value -> ok(value)).get()
+    }
+
+    @Test
+    void 'should map error' () {
+        assertEquals 'mapped', error('error').mapErr(value -> 'mapped').getError()
+    }
+
+    @Test
+    void 'should project value of error' () {
+        assertThrows(IllegalStateException.class, { ok('value').projectToError() })
+
+        assertDoesNotThrow({
+            //noinspection UnnecessaryQualifiedReference
+            Result<String, String> expected = Result<Object, String>.error('error').projectToError()
+            assertEquals 'error', expected.getError()
+        } as Executable)
     }
 
 }
