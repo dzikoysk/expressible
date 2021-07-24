@@ -47,7 +47,7 @@ public class Option<T> implements Iterable<T>, Serializable {
 
     @Override
     public int hashCode() {
-        return value != null ? value.hashCode() : 0;
+        return Objects.hash(value);
     }
 
     @Override

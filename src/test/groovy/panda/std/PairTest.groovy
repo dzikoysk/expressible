@@ -25,28 +25,33 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals
 @CompileStatic
 final class PairTest {
 
-    private final Pair<String, Double> pair = Pair.of('test', 7.0D)
+    private final Pair<String, String> pair = Pair.of('test', 'test')
 
     @Test
     void 'should keep order of associated values' () {
         assertEquals 'test', pair.getFirst()
-        assertEquals 7.0D, pair.getSecond()
+        assertEquals 'test', pair.getSecond()
+    }
+
+    @Test
+    void 'should create proper triple after adding a value'() {
+        assertEquals Triple.of('test', 'test', 'test'), pair.add('test')
     }
 
     @Test
     void 'should display formatted values' () {
-        assertEquals  "['test', '7.0']", pair.toString()
+        assertEquals  "['test', 'test']", pair.toString()
     }
 
     @Test
     void 'should support equals & hashcode' () {
         assertEquals pair, pair
 
-        def same = Pair.of('test', 7.0D)
+        def same = Pair.of('test', 'test')
         assertEquals same, pair
         assertEquals same.hashCode(), pair.hashCode()
 
-        def different = Pair.of('other', 0)
+        def different = Pair.of('other', 'other')
         assertNotEquals different, pair
         assertNotEquals different.hashCode(), pair.hashCode()
     }

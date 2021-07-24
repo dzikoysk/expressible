@@ -33,6 +33,11 @@ final class MonoTest {
     }
 
     @Test
+    void 'should create proper pair after adding a value'() {
+        assertEquals Pair.of('test', 'test'), mono.add('test')
+    }
+
+    @Test
     void 'should display formatted values' () {
         assertEquals  "['test']", mono.toString()
     }

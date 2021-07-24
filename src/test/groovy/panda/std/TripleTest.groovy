@@ -35,6 +35,11 @@ final class TripleTest {
     }
 
     @Test
+    void 'should create proper quad after adding a value'() {
+        assertEquals Quad.of('test', 'test', 'test', 'test'), triple.add('test')
+    }
+
+    @Test
     void 'should display formatted values' () {
         assertEquals  "['test', 'test', 'test']", triple.toString()
     }
