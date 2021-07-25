@@ -86,10 +86,6 @@ public class Option<T> implements Iterable<T>, Serializable {
     }
 
     public final <R> Option<R> match(List<? extends Case<T, R>> cases) {
-        if (isEmpty()) {
-            return Option.none();
-        }
-
         for (Case<T, R> currentCase : cases) {
             if (currentCase.getCondition().test(value)) {
                 return Option.of(currentCase.getValue().apply(value));

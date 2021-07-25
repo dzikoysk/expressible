@@ -42,4 +42,18 @@ final class LazyTest {
         assertSame firstGet, secondGet
     }
 
+    @Test
+    void 'should execute runnable only once' () {
+        boolean status = false
+        def lazy = Lazy.ofRunnable({ status = !status })
+        lazy.get()
+        lazy.get()
+        assertTrue status
+    }
+
+    @Test
+    void 'should be initialized instantly if value is given' () {
+        assertTrue new Lazy('value').isInitialized()
+    }
+
 }

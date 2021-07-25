@@ -18,6 +18,7 @@ package panda.std
 
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.function.Executable
 import panda.std.function.ThrowingSupplier
 
 import java.util.function.IntFunction
@@ -82,6 +83,7 @@ final class OptionTest {
     @Test
     void 'should throw if empty' () {
         assertThrows RuntimeException.class, () -> none().orThrow(() -> new RuntimeException())
+        assertDoesNotThrow({ Option.of('value').orThrow(() -> new RuntimeException()) } as Executable)
     }
 
     @Test
@@ -138,7 +140,7 @@ final class OptionTest {
     @Test
     void 'should create option based on condition' () {
         assertTrue Option.when(true, new Object()).isDefined()
-        assertFalse Option.when(false, new Object()).isDefined()
+        assertFalse Option.when(false, { new Object() } as Supplier).isDefined()
     }
 
     @Test
@@ -151,6 +153,17 @@ final class OptionTest {
     void 'should iterate over a value' () {
         def iterator = Option.of('test').iterator()
         assertEquals 'test', iterator.next()
+    }
+
+    @Test
+    void 'should be convertable to result' () {
+        def result = Option.of('test').toResult("Not found")
+        assertTrue result.isOk()
+        assertEquals 'test', result.get()
+
+        def errorResult = none().toResult({ "Not found" } as Supplier)
+        assertTrue errorResult.isErr()
+        assertEquals "Not found", errorResult.getError()
     }
 
     @Test
