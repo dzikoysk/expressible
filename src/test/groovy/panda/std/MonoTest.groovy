@@ -43,8 +43,10 @@ final class MonoTest {
     }
 
     @Test
-    void 'should support equals & hashcode' () {
+    void 'should implement equals & hashcode' () {
         assertEquals mono, mono
+        assertNotEquals null, mono
+        assertNotEquals new Object(), mono
 
         def same = Mono.of('test')
         assertEquals same, mono

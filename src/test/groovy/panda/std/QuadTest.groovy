@@ -43,6 +43,8 @@ final class QuadTest {
     @Test
     void 'should support equals & hashcode' () {
         assertEquals quad, quad
+        assertNotEquals null, quad
+        assertNotEquals new Object(), quad
 
         def same = Quad.of('test', 'test', 'test', 'test')
         assertEquals same, quad

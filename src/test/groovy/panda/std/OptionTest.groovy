@@ -153,4 +153,21 @@ final class OptionTest {
         assertEquals 'test', iterator.next()
     }
 
+    @Test
+    void 'should implement equals & hashcode' () {
+        def base =  Option.of('value')
+
+        assertEquals base, base
+        assertNotEquals null, base
+        assertNotEquals new Object(), base
+
+        def same = Option.of('value')
+        assertEquals same, base
+        assertEquals same.hashCode(), base.hashCode()
+
+        def different = Option.of('other')
+        assertNotEquals different, base
+        assertNotEquals different.hashCode(), base.hashCode()
+    }
+
 }

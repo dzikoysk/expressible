@@ -46,6 +46,8 @@ final class PairTest {
     @Test
     void 'should support equals & hashcode' () {
         assertEquals pair, pair
+        assertNotEquals null, pair
+        assertNotEquals new Object(), pair
 
         def same = Pair.of('test', 'test')
         assertEquals same, pair

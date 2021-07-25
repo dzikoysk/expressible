@@ -47,6 +47,8 @@ final class TripleTest {
     @Test
     void 'should support equals & hashcode' () {
         assertEquals triple, triple
+        assertNotEquals null, triple
+        assertNotEquals new Object(), triple
 
         def same = Triple.of('test', 'test', 'test')
         assertEquals same, triple
