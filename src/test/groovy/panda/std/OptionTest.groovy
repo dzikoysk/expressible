@@ -167,12 +167,13 @@ final class OptionTest {
     }
 
     @Test
+    @SuppressWarnings('ChangeToOperator')
     void 'should implement equals & hashcode' () {
         def base =  Option.of('value')
 
         assertEquals base, base
-        assertNotEquals null, base
-        assertNotEquals new Object(), base
+        assertFalse base.equals(null)
+        assertFalse base.equals(new Object())
 
         def same = Option.of('value')
         assertEquals same, base

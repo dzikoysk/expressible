@@ -20,6 +20,7 @@ import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertFalse
 import static org.junit.jupiter.api.Assertions.assertNotEquals
 
 @CompileStatic
@@ -44,10 +45,11 @@ final class PairTest {
     }
 
     @Test
+    @SuppressWarnings('ChangeToOperator')
     void 'should support equals & hashcode' () {
         assertEquals pair, pair
-        assertNotEquals null, pair
-        assertNotEquals new Object(), pair
+        assertFalse pair.equals(null)
+        assertFalse pair.equals(new Object())
 
         def same = Pair.of('test', 'test')
         assertEquals same, pair

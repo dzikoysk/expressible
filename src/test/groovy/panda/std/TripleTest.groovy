@@ -20,6 +20,7 @@ import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertFalse
 import static org.junit.jupiter.api.Assertions.assertNotEquals
 
 @CompileStatic
@@ -45,10 +46,11 @@ final class TripleTest {
     }
 
     @Test
+    @SuppressWarnings('ChangeToOperator')
     void 'should support equals & hashcode' () {
         assertEquals triple, triple
-        assertNotEquals null, triple
-        assertNotEquals new Object(), triple
+        assertFalse triple.equals(null)
+        assertFalse triple.equals(new Object())
 
         def same = Triple.of('test', 'test', 'test')
         assertEquals same, triple

@@ -20,6 +20,7 @@ import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertFalse
 import static org.junit.jupiter.api.Assertions.assertNotEquals
 
 @CompileStatic
@@ -41,10 +42,11 @@ final class QuadTest {
     }
 
     @Test
+    @SuppressWarnings('ChangeToOperator')
     void 'should support equals & hashcode' () {
         assertEquals quad, quad
-        assertNotEquals null, quad
-        assertNotEquals new Object(), quad
+        assertFalse quad.equals(null)
+        assertFalse quad.equals(new Object())
 
         def same = Quad.of('test', 'test', 'test', 'test')
         assertEquals same, quad

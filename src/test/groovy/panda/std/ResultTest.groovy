@@ -75,10 +75,13 @@ final class ResultTest {
     }
 
     @Test
-    void 'should support equals & hashcode' () {
+    @SuppressWarnings('ChangeToOperator')
+    void 'should implement equals & hashcode' () {
         def base = ok("test")
         assertEquals base, base
         assertEquals base.hashCode(), base.hashCode()
+        assertFalse base.equals(null)
+        assertFalse base.equals(new Object())
 
         def same = ok("test")
         assertEquals base, same

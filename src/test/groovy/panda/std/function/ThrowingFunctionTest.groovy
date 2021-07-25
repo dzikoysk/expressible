@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package panda.std
+package panda.std.function
 
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
-
-import panda.std.function.ThrowingFunction
 
 import java.util.function.Function
 import java.util.stream.Collectors
@@ -40,6 +38,12 @@ final class ThrowingFunctionTest {
                 .collect(Collectors.toList())
 
         assertEquals(Arrays.asList(1, -1, 2), numbers)
+    }
+
+    @Test
+    void 'should return the same value through the identify function' () {
+        def value = new Object()
+        assertEquals value, ThrowingFunction.identity().apply(value)
     }
 
 }

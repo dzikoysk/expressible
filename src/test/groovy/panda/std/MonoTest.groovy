@@ -20,6 +20,7 @@ import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertFalse
 import static org.junit.jupiter.api.Assertions.assertNotEquals
 
 @CompileStatic
@@ -43,10 +44,11 @@ final class MonoTest {
     }
 
     @Test
+    @SuppressWarnings('ChangeToOperator')
     void 'should implement equals & hashcode' () {
         assertEquals mono, mono
-        assertNotEquals null, mono
-        assertNotEquals new Object(), mono
+        assertFalse mono.equals(null)
+        assertFalse mono.equals(new Object())
 
         def same = Mono.of('test')
         assertEquals same, mono
