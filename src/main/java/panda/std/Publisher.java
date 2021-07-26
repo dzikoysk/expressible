@@ -17,8 +17,8 @@
 package panda.std;
 
 @FunctionalInterface
-public interface Publisher<T> {
+public interface Publisher<TYPE, VALUE> {
 
-    void subscribe(Subscriber<? super T> subscriber);
+    TYPE subscribe(Subscriber<? super VALUE> subscriber);
 
 }

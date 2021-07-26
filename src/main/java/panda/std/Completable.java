@@ -16,8 +16,6 @@
 
 package panda.std;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,21 +24,21 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Completable<@NotNull T> implements Publisher<T> {
+public class Completable<VALUE> implements Publisher<Completable<VALUE>, VALUE> {
 
-    private T value;
+    private VALUE value;
     private boolean ready;
-    private List<Subscriber<? super T>> subscribers = new ArrayList<>(3);
+    private List<Subscriber<? super VALUE>> subscribers = new ArrayList<>(3);
 
     public Completable() {
         this.value = null;
     }
 
-    public static <T> Completable<T> completed(T value) {
-        return new Completable<T>().complete(value);
+    public static <VALUE> Completable<VALUE> completed(VALUE value) {
+        return new Completable<VALUE>().complete(value);
     }
 
-    public static <T> Completable<T> create() {
+    public static <VALUE> Completable<VALUE> create() {
         return new Completable<>();
     }
 
@@ -52,7 +50,7 @@ public class Completable<@NotNull T> implements Publisher<T> {
         return !isReady();
     }
 
-    public T get() {
+    public VALUE get() {
         if (isReady()) {
             return value;
         }
@@ -60,7 +58,7 @@ public class Completable<@NotNull T> implements Publisher<T> {
         throw new IllegalStateException("Option has not been completed");
     }
 
-    public <E extends Exception> T orThrow(Supplier<E> exception) throws E {
+    public <ERROR extends Exception> VALUE orThrow(Supplier<ERROR> exception) throws ERROR {
         if (isReady()) {
             return value;
         }
@@ -69,16 +67,18 @@ public class Completable<@NotNull T> implements Publisher<T> {
     }
 
     @Override
-    public void subscribe(Subscriber<? super T> subscriber) {
+    public Completable<VALUE> subscribe(Subscriber<? super VALUE> subscriber) {
         if (isReady()) {
             subscriber.onComplete(get());
         }
         else {
             subscribers.add(subscriber);
         }
+
+        return this;
     }
 
-    public Completable<T> complete(T value) {
+    public Completable<VALUE> complete(VALUE value) {
         if (isReady()) {
             return this;
         }
@@ -86,7 +86,7 @@ public class Completable<@NotNull T> implements Publisher<T> {
         this.ready = true;
         this.value = Objects.requireNonNull(value);
 
-        for (Subscriber<? super T> subscriber : subscribers) {
+        for (Subscriber<? super VALUE> subscriber : subscribers) {
             subscriber.onComplete(value);
         }
 
@@ -94,25 +94,25 @@ public class Completable<@NotNull T> implements Publisher<T> {
         return this;
     }
 
-    public Completable<T> then(Consumer<? super T> consumer) {
+    public Completable<VALUE> then(Consumer<? super VALUE> consumer) {
         subscribe(consumer::accept);
         return this;
     }
 
-    public <R> Completable<R> thenApply(Function<? super T, R> map) {
+    public <R> Completable<R> thenApply(Function<? super VALUE, R> map) {
         Completable<R> mappedOption = new Completable<>();
         subscribe(completedValue -> mappedOption.complete(map.apply(completedValue)));
         return mappedOption;
     }
 
-    public <R> Completable<R> thenCompose(Function<? super T, ? extends Completable<R>> map) {
+    public <R> Completable<R> thenCompose(Function<? super VALUE, ? extends Completable<R>> map) {
         Completable<R> mappedOption = new Completable<>();
         subscribe(completedValue -> map.apply(completedValue).then(mappedOption::complete));
         return mappedOption;
     }
 
-    public CompletableFuture<T> toFuture() {
-        CompletableFuture<T> future = new CompletableFuture<>();
+    public CompletableFuture<VALUE> toFuture() {
+        CompletableFuture<VALUE> future = new CompletableFuture<>();
         then(future::complete);
         return future;
     }

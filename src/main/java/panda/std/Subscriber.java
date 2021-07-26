@@ -17,8 +17,8 @@
 package panda.std;
 
 @FunctionalInterface
-public interface Subscriber<T> {
+public interface Subscriber<VALUE> {
 
-    void onComplete(T value);
+    void onComplete(VALUE value);
 
 }
