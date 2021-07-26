@@ -32,3 +32,11 @@ Available in panda-lang repository:
     <url>https://repo.panda-lang.org/releases</url>
 </repository>
 ```
+
+#### Used by
+
+* Panda Organization (Panda, Hub, Light)
+* Reposilite
+* Utilities like CDN, Dependency-Injector
+* FunnyGuilds Organization (FunnyGuilds, FunnyCommands)
+* Private projects and API consumers of the given libraries

@@ -36,8 +36,20 @@ public class Completable<@NotNull T> implements Publisher<T> {
         this.value = null;
     }
 
+    public static <T> Completable<T> completed(T value) {
+        return new Completable<T>().complete(value);
+    }
+
+    public static <T> Completable<T> create() {
+        return new Completable<>();
+    }
+
     public boolean isReady() {
         return ready;
+    }
+
+    public boolean isUnprepared() {
+        return !isReady();
     }
 
     public T get() {
@@ -103,10 +115,6 @@ public class Completable<@NotNull T> implements Publisher<T> {
         CompletableFuture<T> future = new CompletableFuture<>();
         then(future::complete);
         return future;
-    }
-
-    public static <T> Completable<T> completed(T value) {
-        return new Completable<T>().complete(value);
     }
 
 }
