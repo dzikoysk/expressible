@@ -176,7 +176,7 @@ public class Option<T> implements Iterable<T>, Serializable {
     }
 
     public <E> Result<T, E> toResult(E orElse) {
-        return isDefined() ? Result.ok(get()) : Result.error(orElse);
+        return toResult(() -> orElse);
     }
 
     public <E> Result<T, E> toResult(Supplier<E> orElse) {
@@ -196,7 +196,7 @@ public class Option<T> implements Iterable<T>, Serializable {
         return value != null? new Option<>(value) : none();
     }
 
-    public static <T> Option<Completable<T>> ofCompleted(T value) {
+    public static <T> Option<Completable<T>> withCompleted(T value) {
         return Option.of(Completable.completed(value));
     }
 
@@ -206,14 +206,14 @@ public class Option<T> implements Iterable<T>, Serializable {
     }
 
     public static <T> Option<T> when(boolean condition, @Nullable T value) {
-        return condition ? of(value) : Option.none();
+        return when(condition, () -> value);
     }
 
     public static <T> Option<T> when(boolean condition, Supplier<@Nullable T> valueSupplier) {
         return condition ? of(valueSupplier.get()) : Option.none();
     }
 
-    public static <T, E extends Exception> Option<T> attempt(Class<E> exceptionType, ThrowingSupplier<T, E> supplier) {
+    public static <T, E extends Exception> Option<T> attempt(Class<E> exceptionType, ThrowingSupplier<T, E> supplier) throws AttemptFailedException {
         try {
             return of(supplier.get());
         } catch (Exception exception) {
@@ -221,7 +221,7 @@ public class Option<T> implements Iterable<T>, Serializable {
                 return Option.none();
             }
 
-            throw new RuntimeException("Unsupported exception", exception);
+            throw new AttemptFailedException(exception);
         }
     }
 

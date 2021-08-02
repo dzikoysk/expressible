@@ -33,7 +33,50 @@ Available in panda-lang repository:
 </repository>
 ```
 
-#### Used by
+### Examples
+Suggested snippets show only a small use-cases for the available api. 
+You're not forced to use this library this way, so you may need to find your style in expressing your thoughts.
+Adopting functional approach requires time and to simplify this process it's easier to slowly introduce new elements based on simple concepts.
+
+#### Option
+
+#### Result
+
+Rather than using `Exception` based error handling, return meaningful errors and interact with api responses gracefully.
+Following functional programming patterns make sure your methods don't contain side effects and unexpected exit points. 
+
+```kotlin
+class AuthenticationFacade {
+
+    fun authenticateByCredentials(credentials: String): Result<Session, ErrorResponse> =
+        authenticator.authenticateByCredentials(credentials)
+            .mapErr { error -> ErrorResponse(HttpCode.UNAUTHORIZED, error) }
+
+}
+
+class Authenticator {
+
+    fun authenticateByCredentials(credentials: String?): Result<Session, String> {
+        if (credentials == null) {
+            return error("Authorization credentials are not specified")
+        }
+
+        // [...]
+        return ok(Session())
+    }
+
+}
+```
+
+#### Lazy
+
+#### Completable
+
+#### Mono, Pair, Triple, Quad
+
+#### Panda Stream
+
+### Used by
 
 * [Panda Organization](https://github.com/panda-lang) ([Panda](https://github.com/panda-lang/panda), [Hub](https://github.com/panda-lang/hub), [Light](https://github.com/panda-lang))
 * [Reposilite](https://github.com/dzikoysk/reposilite)
