@@ -46,26 +46,47 @@ Rather than using `Exception` based error handling, return meaningful errors and
 Following functional programming patterns make sure your methods don't contain side effects and unexpected exit points. 
 
 ```kotlin
-class AuthenticationFacade {
+class UserFacade {
 
-    fun authenticateByCredentials(credentials: String): Result<Session, ErrorResponse> =
-        authenticator.authenticateByCredentials(credentials)
-            .mapErr { error -> ErrorResponse(HttpCode.UNAUTHORIZED, error) }
+    // You can start adoption in a regular, non-functional codebases
+    fun createUser(username: String): Result<User, String> {
+        if (userRepository.findUserByName(username).isPresent()) {
+            return error("User $username already exists")
+        }
 
-}
-
-class Authenticator {
-
-    fun authenticateByCredentials(credentials: String?): Result<Session, String> {
-        if (credentials == null) {
-            return error("Authorization credentials are not specified")
+        if (!usernamePattern.matches(username)) {
+            return error("Invalid username")
         }
 
         // [...]
-        return ok(Session())
+        return ok(userRepository.createUser(username))
     }
 
 }
+
+class UserEndpoint {
+    
+    fun createUser(request: HttpRequest, response: HttpResponse) =
+        request.createUsername(request.param("username"))
+            .mapErr { ErrorReposne(BAD_REQUEST, it) }
+            .let { response.respondWithJsonDto(it.any) }
+
+}
+
+internal class UserFacadeTest : UserSpec {
+
+    @Test
+    fun `should create user with a valid username` () {
+        // given: a valid username
+        val username = 'onlypanda'
+        // when: user is created with the following name
+        val user = userFacade.createUser(username)
+        // then: user has been created
+        assertTrue user.isOk()
+        assertEquals username, user.get().getUsername()
+    }
+    
+} 
 ```
 
 #### Lazy
