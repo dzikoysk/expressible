@@ -72,6 +72,14 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? valueMerge.apply(get()) : errorMerge.apply(getError());
     }
 
+    public <REQUIRED_ERROR>  Result<VALUE, REQUIRED_ERROR> projectToValue() {
+        if (isErr()) {
+            throw new IllegalStateException("Cannot project result with error to value");
+        }
+
+        return ok(this.get());
+    }
+
     public <REQUIRED_VALUE> Result<REQUIRED_VALUE, ERROR> projectToError() {
         if (isOk()) {
             throw new IllegalStateException("Cannot project result with value to error");

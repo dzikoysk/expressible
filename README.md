@@ -17,20 +17,14 @@ Supported wrappers (in `panda.std.*` package):
 <hr>
 
 ```xml
-<dependency>
-    <groupId>org.panda-lang</groupId>
-    <artifactId>expressible</artifactId>
-    <version>1.0.3</version>
-</dependency>>
-```
+repositories {
+    maven { url 'https://repo.panda-lang.org/releases' }
+}
 
-Available in panda-lang repository:
-
-```xml
-<repository>
-    <id>panda-repository</id>
-    <url>https://repo.panda-lang.org/releases</url>
-</repository>
+dependencies {
+    implementation("org.panda-lang:expressible:1.0.4") // Core library
+    implementation("org.panda-lang:expressible-kt:1.0.4") // Kotlin extensions
+}
 ```
 
 ### Examples
