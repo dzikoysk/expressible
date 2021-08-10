@@ -9,6 +9,7 @@
     <modules>
         <module>expressible</module>
         <module>expressible-kt</module>
+        <module>expressible-junit</module>
     </modules>
 
     <properties>

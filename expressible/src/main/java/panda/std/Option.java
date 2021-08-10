@@ -60,6 +60,11 @@ public class Option<T> implements Iterable<T>, Serializable {
     }
 
     @Override
+    public String toString() {
+        return isEmpty() ? "Option{EMPTY}" : "Option{'" + value + "'}";
+    }
+
+    @Override
     public Iterator<T> iterator() {
         return isDefined() ? new SingletonIterator<>(value) : Collections.emptyIterator();
     }
