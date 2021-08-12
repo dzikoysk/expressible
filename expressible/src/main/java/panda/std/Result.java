@@ -68,8 +68,12 @@ public class Result<VALUE, ERROR>  {
         return isOk() && !filter.test(value) ? error(errorSupplier.get()) : this;
     }
 
-    public <COMMON> COMMON merge(Function<VALUE, COMMON> valueMerge, Function<ERROR, COMMON> errorMerge) {
+    public <COMMON> COMMON fold(Function<VALUE, COMMON> valueMerge, Function<ERROR, COMMON> errorMerge) {
         return isOk() ? valueMerge.apply(get()) : errorMerge.apply(getError());
+    }
+
+    public Result<VALUE, ERROR> consume(Consumer<VALUE> valueConsumer, Consumer<ERROR> errorConsumer) {
+        return this.peek(valueConsumer).onError(errorConsumer);
     }
 
     public <REQUIRED_ERROR>  Result<VALUE, REQUIRED_ERROR> projectToValue() {
