@@ -7,10 +7,12 @@ import static panda.std.Result.ok;
 
 public final class ResultAssertions {
 
-    public static void assertOk(Result<?, ?> result) {
+    public static <VALUE> VALUE assertOk(Result<VALUE, ?> result) {
         if (result.isErr()) {
             fail("Expected success, but result errored with: <" + result.getError() + ">");
         }
+
+        return result.get();
     }
 
     public static <VALUE> void assertOk(VALUE value, Result<VALUE, ?> result) {
@@ -18,10 +20,12 @@ public final class ResultAssertions {
         assertEquals(ok(value), result);
     }
 
-    public static void assertError(Result<?, ?> result) {
+    public static <ERROR> ERROR assertError(Result<?, ERROR> result) {
         if (result.isOk()) {
             fail("Expected failure, but result succeeded with: <" + result.get() + ">");
         }
+
+        return result.getError();
     }
 
     public static <ERROR> void assertError(ERROR error, Result<?, ERROR> result) {
