@@ -64,8 +64,8 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? function.apply(value) : error(error);
     }
 
-    public Result<VALUE, ERROR> filter(Predicate<VALUE> filter, Supplier<ERROR> errorSupplier) {
-        return isOk() && !filter.test(value) ? error(errorSupplier.get()) : this;
+    public Result<VALUE, ERROR> filter(Predicate<VALUE> filter, Function<VALUE, ERROR> errorSupplier) {
+        return isOk() && !filter.test(value) ? error(errorSupplier.apply(value)) : this;
     }
 
     public <COMMON> COMMON fold(Function<VALUE, COMMON> valueMerge, Function<ERROR, COMMON> errorMerge) {
