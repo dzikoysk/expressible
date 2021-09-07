@@ -72,6 +72,12 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? valueMerge.apply(get()) : errorMerge.apply(getError());
     }
 
+    public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> is(Class<MAPPED_VALUE> type, Function<VALUE, ERROR> errorSupplier) {
+        return this
+                .filter(type::isInstance, errorSupplier)
+                .map(type::cast);
+    }
+
     public Result<VALUE, ERROR> consume(Consumer<VALUE> valueConsumer, Consumer<ERROR> errorConsumer) {
         return this.peek(valueConsumer).onError(errorConsumer);
     }

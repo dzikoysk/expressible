@@ -45,6 +45,52 @@ public class Option<T> implements Iterable<T>, Serializable {
         this.value = value;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> Option<T> none() {
+        return (Option<T>) NONE;
+    }
+
+    public static <T> Option<T> of(@Nullable T value) {
+        return value != null? new Option<>(value) : none();
+    }
+
+    @SuppressWarnings({ "OptionalUsedAsFieldOrParameterType" })
+    public static <T> Option<T> ofOptional(Optional<T> optional) {
+        return of(optional.orElse(null));
+    }
+
+    public static <T> Option<Completable<T>> withCompleted(T value) {
+        return Option.of(Completable.completed(value));
+    }
+
+    public static <T> Option<T> when(boolean condition, @Nullable T value) {
+        return when(condition, () -> value);
+    }
+
+    public static <T> Option<T> when(boolean condition, Supplier<@Nullable T> valueSupplier) {
+        return condition ? of(valueSupplier.get()) : Option.none();
+    }
+
+    public static <T> Option<T> flatWhen(boolean condition, Option<T> value) {
+        return condition ? value : none();
+    }
+
+    public static <T> Option<T> flatWhen(boolean condition, Supplier<Option<T>> supplier) {
+        return condition ? supplier.get() : none();
+    }
+
+    public static <T, E extends Exception> Option<T> attempt(Class<E> exceptionType, ThrowingSupplier<T, E> supplier) throws AttemptFailedException {
+        try {
+            return of(supplier.get());
+        } catch (Exception exception) {
+            if (exceptionType.isAssignableFrom(exception.getClass())) {
+                return Option.none();
+            }
+
+            throw new AttemptFailedException(exception);
+        }
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(value);
@@ -90,7 +136,7 @@ public class Option<T> implements Iterable<T>, Serializable {
         return match(Arrays.asList(cases));
     }
 
-    public final <R> Option<R> match(List<? extends Case<T, R>> cases) {
+    public <R> Option<R> match(List<? extends Case<T, R>> cases) {
         for (Case<T, R> currentCase : cases) {
             if (currentCase.getCondition().test(value)) {
                 return Option.of(currentCase.getValue().apply(value));
@@ -98,6 +144,12 @@ public class Option<T> implements Iterable<T>, Serializable {
         }
 
         return Option.none();
+    }
+
+    public <T> Option<T> is(Class<T> type) {
+        return this
+                .filter(type::isInstance)
+                .map(type::cast);
     }
 
     public Option<T> peek(Consumer<T> consumer) {
@@ -190,44 +242,6 @@ public class Option<T> implements Iterable<T>, Serializable {
 
     public Optional<T> toOptional() {
         return Optional.ofNullable(value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> Option<T> none() {
-        return (Option<T>) NONE;
-    }
-
-    public static <T> Option<T> of(@Nullable T value) {
-        return value != null? new Option<>(value) : none();
-    }
-
-    public static <T> Option<Completable<T>> withCompleted(T value) {
-        return Option.of(Completable.completed(value));
-    }
-
-    @SuppressWarnings({ "OptionalUsedAsFieldOrParameterType" })
-    public static <T> Option<T> ofOptional(Optional<T> optional) {
-        return of(optional.orElse(null));
-    }
-
-    public static <T> Option<T> when(boolean condition, @Nullable T value) {
-        return when(condition, () -> value);
-    }
-
-    public static <T> Option<T> when(boolean condition, Supplier<@Nullable T> valueSupplier) {
-        return condition ? of(valueSupplier.get()) : Option.none();
-    }
-
-    public static <T, E extends Exception> Option<T> attempt(Class<E> exceptionType, ThrowingSupplier<T, E> supplier) throws AttemptFailedException {
-        try {
-            return of(supplier.get());
-        } catch (Exception exception) {
-            if (exceptionType.isAssignableFrom(exception.getClass())) {
-                return Option.none();
-            }
-
-            throw new AttemptFailedException(exception);
-        }
     }
 
 }
