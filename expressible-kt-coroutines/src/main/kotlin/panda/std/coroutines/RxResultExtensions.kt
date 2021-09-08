@@ -1,5 +1,6 @@
-package panda.std
+package panda.std.coroutines
 
+import panda.std.Result
 import panda.std.Result.ok
 
 suspend fun <VALUE, ERROR, MAPPED> Result<VALUE, ERROR>.map(mapper: suspend (VALUE) -> MAPPED): Result<MAPPED, ERROR> =
