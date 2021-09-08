@@ -7,12 +7,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>expressible-kt</artifactId>
+    <artifactId>expressible-kt-coroutines</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.panda-lang</groupId>
-            <artifactId>expressible</artifactId>
+            <artifactId>expressible-kt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

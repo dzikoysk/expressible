@@ -53,15 +53,15 @@ public class Result<VALUE, ERROR>  {
     }
 
     public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> map(Function<VALUE, MAPPED_VALUE> function) {
-        return isOk() ? ok(function.apply(value)) : error(error);
+        return isOk() ? ok(function.apply(value)) : projectToError();
     }
 
     public <MAPPED_ERROR> Result<VALUE, MAPPED_ERROR> mapErr(Function<ERROR, MAPPED_ERROR> function) {
-        return isOk() ? ok(value) : error(function.apply(error));
+        return isOk() ? projectToValue() : error(function.apply(error));
     }
 
     public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> flatMap(Function<VALUE, Result<MAPPED_VALUE, ERROR>> function) {
-        return isOk() ? function.apply(value) : error(error);
+        return isOk() ? function.apply(value) : projectToError();
     }
 
     public Result<VALUE, ERROR> filter(Predicate<VALUE> filter, Function<VALUE, ERROR> errorSupplier) {
@@ -87,7 +87,7 @@ public class Result<VALUE, ERROR>  {
             throw new IllegalStateException("Cannot project result with error to value");
         }
 
-        return ok(this.get());
+        return ok(value);
     }
 
     public <REQUIRED_VALUE> Result<REQUIRED_VALUE, ERROR> projectToError() {

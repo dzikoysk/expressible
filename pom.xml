@@ -5,15 +5,16 @@
     <groupId>org.panda-lang</groupId>
     <artifactId>expressible-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.9</version>
+    <version>1.0.11</version>
     <modules>
         <module>expressible</module>
         <module>expressible-kt</module>
+        <module>expressible-kt-coroutines</module>
         <module>expressible-junit</module>
     </modules>
 
     <properties>
-        <expressible.version>1.0.9</expressible.version>
+        <expressible.version>1.0.11</expressible.version>
         <kotlin.version>1.5.21</kotlin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -39,14 +40,19 @@
             <dependency>
                 <groupId>org.panda-lang</groupId>
                 <artifactId>expressible</artifactId>
-                <version>1.0.9</version>
+                <version>1.0.11</version>
             </dependency>
             <dependency>
                 <groupId>org.panda-lang</groupId>
                 <artifactId>expressible-kt</artifactId>
-                <version>1.0.9</version>
+                <version>1.0.11</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kotlinx-coroutines-core</artifactId>
+                <version>1.5.2</version>
+            </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib</artifactId>
