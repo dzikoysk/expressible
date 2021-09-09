@@ -140,6 +140,7 @@ final class ResultTest {
     @Test
     void 'should filter value and return error if needed' () {
         assertEquals 'error', ok('value').filter({ false }, { 'error' }).getError()
+        assertEquals 'error', ok('value').filterNot({ true }, { 'error' }).getError()
     }
 
     @Test

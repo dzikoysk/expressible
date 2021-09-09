@@ -64,8 +64,12 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? function.apply(value) : projectToError();
     }
 
-    public Result<VALUE, ERROR> filter(Predicate<VALUE> filter, Function<VALUE, ERROR> errorSupplier) {
-        return isOk() && !filter.test(value) ? error(errorSupplier.apply(value)) : this;
+    public Result<VALUE, ERROR> filter(Predicate<VALUE> predicate, Function<VALUE, ERROR> errorSupplier) {
+        return isOk() && !predicate.test(value) ? error(errorSupplier.apply(value)) : this;
+    }
+
+    public Result<VALUE, ERROR> filterNot(Predicate<VALUE> predicate, Function<VALUE, ERROR> errorSupplier) {
+        return filter(value -> !predicate.test(value), errorSupplier);
     }
 
     public <COMMON> COMMON fold(Function<VALUE, COMMON> valueMerge, Function<ERROR, COMMON> errorMerge) {
