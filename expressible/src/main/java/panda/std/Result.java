@@ -64,6 +64,10 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? function.apply(value) : projectToError();
     }
 
+    public <MAPPED_ERROR> Result<VALUE, MAPPED_ERROR> flatMapErr(Function<ERROR, Result<VALUE, MAPPED_ERROR>> function) {
+        return isErr() ? function.apply(error) : projectToValue();
+    }
+
     public Result<VALUE, ERROR> filter(Predicate<VALUE> predicate, Function<VALUE, ERROR> errorSupplier) {
         return isOk() && !predicate.test(value) ? error(errorSupplier.apply(value)) : this;
     }
