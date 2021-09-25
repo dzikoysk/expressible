@@ -5,14 +5,14 @@ Express yourself with inspired by Rust, Kotlin and Vavr wrappers, to provide bet
 <hr>
 
 Supported wrappers (in `panda.std.*` package):
-* `Result<Value, Error>`
-* `Option<Value>`
-* `Lazy<Value>`
-* `Completable<Value>` with `Publisher & Subscriber` pattern
-* `Mono<A>`, `Pair<A, B>`, `Triple<A, B, C>`, `Quad<A, B, C, D>`
-* Throwing functions, runnables, suppliers and consumers
-* Tri and Quad consumers, functions and predicates 
-* `PandaStream<Value>` 
+* `Result<Value, Error>` - solve error handling gracfully
+* `Option<Value>` - enhanced alternative to standard `Optional<Value>
+* `Lazy<Value>` - lazy values & runners
+* `Completable<Value>` with `Publisher & Subscriber` pattern - synchornized alternative to `CompletableFuture<Value>`
+* `Mono<A>`, `Pair<A, B>`, `Triple<A, B, C>`, `Quad<A, B, C, D>` - generic wrappers for set of values
+* Throwing functions, runnables, suppliers and consumers - set of functional interfaces with support for exception signatures
+* Tri and Quad consumers, functions and predicates - additional functional interfaces
+* `PandaStream<Value>` - `Stream<Value>` wrapper with support for features provided by `expresible` library
 
 <hr>
 
@@ -34,8 +34,6 @@ Suggested snippets show only a small use-cases for the available api.
 You're not forced to use this library this way, so you may need to find your style in expressing your thoughts.
 Adopting functional approach requires time and to simplify this process it's easier to slowly introduce new elements based on simple concepts.
 
-#### Option
-
 #### Result
 
 Rather than using `Exception` based error handling, return meaningful errors and interact with api responses gracefully.
@@ -43,34 +41,25 @@ Following functional programming patterns make sure your methods don't contain s
 
 ```kotlin
 class UserFacade {
-
     // You can start adoption in a regular, non-functional codebases
     fun createUser(username: String): Result<User, String> {
         if (userRepository.findUserByName(username).isPresent()) {
             return error("User $username already exists")
         }
-
-        if (!usernamePattern.matches(username)) {
-            return error("Invalid username")
-        }
-
-        // [...]
         return ok(userRepository.createUser(username))
     }
-
 }
 
 class UserEndpoint {
-    
+    // You can also use fully functional approach
     fun createUser(request: HttpRequest, response: HttpResponse) =
-        request.createUsername(request.param("username"))
-            .mapErr { ErrorReposne(BAD_REQUEST, it) }
-            .let { response.respondWithJsonDto(it.any) }
-
+        userFacade.createUsername(request.param("username"))
+            .peek { user -> response.respondWithJsonDto(user) }
+            .onError { error -> ErrorReposne(BAD_REQUEST, error) }
 }
 
 internal class UserFacadeTest : UserSpec {
-
+    // JUnit support
     @Test
     fun `should create user with a valid username` () {
         // given: a valid username
@@ -78,20 +67,47 @@ internal class UserFacadeTest : UserSpec {
         // when: user is created with the following name
         val user = userFacade.createUser(username)
         // then: user has been created
-        assertTrue user.isOk()
-        assertEquals username, user.get().getUsername()
+        assertOk(username, user.map(User::getUsername))
     }
-    
 } 
+```
+
+#### Option
+Similar usage to `Optional<Value>` type provided by Java:
+
+```java
+Option<String> withValue = Option.of("Value");
+Option<String> empty = Option.empty();
 ```
 
 #### Lazy
 
+```java
+Lazy<String> completed = new Lazy<>("Value");
+Lazy<String> lazy = new Lazy<>(() -> "Value");
+Lazy<Void> initialize = Lazy.ofRunnable(() -> "Called just once);
+
+String value = completed.get();
+```
+
 #### Completable
 
-#### Mono, Pair, Triple, Quad
+```java
+Completable<String> completable = Completable.create();
+
+completable
+    .thenApply(value -> parseBoolean(value))
+    .then(value -> System.out.println(value));
+
+completable.complete("true");
+```
 
 #### Panda Stream
+
+```java
+PandaStream<String> empty = PandaStream.empty();
+PandaStream<String> standard = PandaStream.of(new ArrayList<>().stream());
+```
 
 ### Used by
 
