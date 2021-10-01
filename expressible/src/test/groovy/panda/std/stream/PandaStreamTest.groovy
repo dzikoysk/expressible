@@ -48,9 +48,9 @@ class PandaStreamTest {
     }
 
     @Test
-    void isInstanceAndMap() {
+    void is() {
         assertArrayEquals NUMBERS, PandaStream.of(1, null, 2, "3", 3, "4")
-                .isInstanceAndMap(Integer.class)
+                .is(Integer.class)
                 .toArray({ length -> new Integer[length] } as IntFunction)
     }
 

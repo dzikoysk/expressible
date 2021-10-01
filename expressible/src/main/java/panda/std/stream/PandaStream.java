@@ -73,7 +73,7 @@ public class PandaStream<T> {
         return new PandaStream<>(stream.flatMap(function));
     }
 
-    public <S> PandaStream<S> isInstanceAndMap(Class<S> type) {
+    public <S> PandaStream<S> is(Class<S> type) {
         return this
                 .filter(type::isInstance)
                 .map(type::cast);
@@ -166,7 +166,7 @@ public class PandaStream<T> {
     }
 
     public <K, V> Map<K, V> toMap(Function<T, Pair<K, V>> mapper) {
-        return toMap(t -> mapper.apply(t).getFirst(), t -> mapper.apply(t).getSecond());
+        return toMap(key -> mapper.apply(key).getFirst(), value -> mapper.apply(value).getSecond());
     }
 
     public Stream<T> toStream() {
