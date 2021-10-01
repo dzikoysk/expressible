@@ -18,6 +18,7 @@ package panda.std.stream
 
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
+import panda.std.Pair
 
 import java.util.function.IntFunction
 import java.util.function.Predicate
@@ -43,6 +44,13 @@ class PandaStreamTest {
     void map() {
         assertArrayEquals NUMBERS, PandaStream.of(VALUES).map(value -> Integer.parseInt(value))
                 .sorted()
+                .toArray({ length -> new Integer[length] } as IntFunction)
+    }
+
+    @Test
+    void isInstanceAndMap() {
+        assertArrayEquals NUMBERS, PandaStream.of(1, null, 2, "3", 3, "4")
+                .isInstanceAndMap(Integer.class)
                 .toArray({ length -> new Integer[length] } as IntFunction)
     }
 
@@ -91,6 +99,16 @@ class PandaStreamTest {
         assertArrayEquals([1, 2] as Integer[], PandaStream.of(1, 2, 3, 4, 5)
                 .takeWhile(i -> i < 3)
                 .toArray({ length -> new Integer[length] } as IntFunction))
+    }
+
+    @Test
+    void toMap() {
+        def map = PandaStream.of(VALUES)
+                .toMap((text) -> Pair.of(text, Integer.parseInt(text)))
+
+        assertEquals 1, map.get("1")
+        assertEquals 2, map.get("2")
+        assertEquals 3, map.get("3")
     }
 
     @Test

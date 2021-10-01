@@ -17,11 +17,14 @@
 package panda.std.stream;
 
 import panda.std.Option;
+import panda.std.Pair;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -68,6 +71,12 @@ public class PandaStream<T> {
 
     public <R> PandaStream<R> flatMapStream(Function<T, Stream<R>> function) {
         return new PandaStream<>(stream.flatMap(function));
+    }
+
+    public <S> PandaStream<S> isInstanceAndMap(Class<S> type) {
+        return this
+                .filter(type::isInstance)
+                .map(type::cast);
     }
 
     public PandaStream<T> filter(Predicate<T> predicate) {
@@ -146,6 +155,18 @@ public class PandaStream<T> {
 
     public List<T> toList() {
         return stream.collect(Collectors.toList());
+    }
+
+    public Set<T> toSet() {
+        return stream.collect(Collectors.toSet());
+    }
+
+    public <K, V> Map<K, V> toMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
+        return stream.collect(Collectors.toMap(keyMapper, valueMapper));
+    }
+
+    public <K, V> Map<K, V> toMap(Function<T, Pair<K, V>> mapper) {
+        return toMap(t -> mapper.apply(t).getFirst(), t -> mapper.apply(t).getSecond());
     }
 
     public Stream<T> toStream() {
