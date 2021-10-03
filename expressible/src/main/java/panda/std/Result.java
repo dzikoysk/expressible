@@ -53,20 +53,16 @@ public class Result<VALUE, ERROR>  {
         return condition ? ok(value) : error(err);
     }
 
-    public static <VALUE, ERROR, E extends Exception> Result<VALUE, ERROR> attempt(Class<E> exceptionType, ThrowingSupplier<VALUE, E> supplier, Supplier<ERROR> error) throws AttemptFailedException {
+    public static <VALUE, ERROR extends Throwable> Result<VALUE, ERROR> attempt(Class<ERROR> exceptionType, ThrowingSupplier<VALUE, ERROR> supplier) throws AttemptFailedException {
         try {
             return Result.ok(supplier.get());
-        } catch (Exception exception) {
-            if (exceptionType.isAssignableFrom(exception.getClass())) {
-                return Result.error(error.get());
+        } catch (Throwable throwable) {
+            if (exceptionType.isAssignableFrom(throwable.getClass())) {
+                return Result.error((ERROR) throwable);
             }
 
-            throw new AttemptFailedException(exception);
+            throw new AttemptFailedException(throwable);
         }
-    }
-
-    public static <VALUE, ERROR, E extends Exception> Result<VALUE, ERROR> attempt(Class<E> exceptionType, ThrowingSupplier<VALUE, E> supplier, ERROR error) throws AttemptFailedException {
-        return attempt(exceptionType, supplier, () -> error);
     }
 
     public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> map(Function<VALUE, MAPPED_VALUE> function) {

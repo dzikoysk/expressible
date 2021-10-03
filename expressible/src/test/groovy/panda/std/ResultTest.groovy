@@ -47,12 +47,13 @@ final class ResultTest {
 
     @Test
     void 'should catch exception in case of failure' () {
-        def result = Result.attempt(Exception.class,() -> { throw new RuntimeException() } as ThrowingSupplier, "error")
+        def result = Result.attempt(Exception.class,() -> { throw new RuntimeException() } as ThrowingSupplier)
+                .mapErr(ex -> "error")
 
         assertTrue result.isErr()
         assertEquals "error", result.getError()
 
-        def resultOk = Result.attempt(Exception.class,() -> Integer.parseInt("1"), "error")
+        def resultOk = Result.attempt(NumberFormatException.class as Class<Throwable>,() -> Integer.parseInt("1"))
 
         assertTrue resultOk.isOk()
         assertEquals(1, resultOk.get())

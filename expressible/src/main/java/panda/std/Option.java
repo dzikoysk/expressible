@@ -79,15 +79,15 @@ public class Option<T> implements Iterable<T>, Serializable {
         return condition ? supplier.get() : none();
     }
 
-    public static <T, E extends Exception> Option<T> attempt(Class<E> exceptionType, ThrowingSupplier<T, E> supplier) throws AttemptFailedException {
+    public static <T, E extends Throwable> Option<T> attempt(Class<E> exceptionType, ThrowingSupplier<T, E> supplier) throws AttemptFailedException {
         try {
             return of(supplier.get());
-        } catch (Exception exception) {
-            if (exceptionType.isAssignableFrom(exception.getClass())) {
+        } catch (Throwable throwable) {
+            if (exceptionType.isAssignableFrom(throwable.getClass())) {
                 return Option.none();
             }
 
-            throw new AttemptFailedException(exception);
+            throw new AttemptFailedException(throwable);
         }
     }
 
