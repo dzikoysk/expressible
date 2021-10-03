@@ -18,6 +18,7 @@ package panda.std;
 
 import org.jetbrains.annotations.Nullable;
 import panda.std.function.ThrowingFunction;
+import panda.std.function.ThrowingSupplier;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -50,6 +51,18 @@ public class Result<VALUE, ERROR>  {
 
     public static <VALUE, ERROR> Result<VALUE, ERROR> when(boolean condition, VALUE value, ERROR err) {
         return condition ? ok(value) : error(err);
+    }
+
+    public static <VALUE, ERROR extends Throwable> Result<VALUE, ERROR> attempt(Class<ERROR> exceptionType, ThrowingSupplier<VALUE, ERROR> supplier) throws AttemptFailedException {
+        try {
+            return Result.ok(supplier.get());
+        } catch (Throwable throwable) {
+            if (exceptionType.isAssignableFrom(throwable.getClass())) {
+                return Result.error((ERROR) throwable);
+            }
+
+            throw new AttemptFailedException(throwable);
+        }
     }
 
     public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> map(Function<VALUE, MAPPED_VALUE> function) {

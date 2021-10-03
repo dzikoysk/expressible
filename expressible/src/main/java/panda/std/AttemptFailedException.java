@@ -5,8 +5,8 @@ package panda.std;
  */
 public final class AttemptFailedException extends RuntimeException {
 
-    public AttemptFailedException(Exception exception) {
-        super(exception);
+    public AttemptFailedException(Throwable throwable) {
+        super(throwable);
     }
 
 }

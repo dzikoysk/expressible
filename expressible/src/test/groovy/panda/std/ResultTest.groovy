@@ -19,7 +19,7 @@ package panda.std
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
-import panda.std.function.ThrowingFunction
+import panda.std.function.ThrowingSupplier
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -43,6 +43,20 @@ final class ResultTest {
     @Test
     void 'should return alternative value if errored' () {
         assertEquals(7, error(-1).orElseGet(err -> 7))
+    }
+
+    @Test
+    void 'should catch exception in case of failure' () {
+        def result = Result.attempt(Exception.class,() -> { throw new RuntimeException() } as ThrowingSupplier)
+                .mapErr(ex -> "error")
+        assertTrue result.isErr()
+        assertEquals "error", result.getError()
+
+        def resultOk = Result.attempt(NumberFormatException.class as Class<Throwable>,() -> Integer.parseInt("1"))
+        assertTrue resultOk.isOk()
+        assertEquals(1, resultOk.get())
+
+        assertThrows AttemptFailedException.class, { Result.attempt(IllegalAccessException.class, { throw new RuntimeException("Gotcha") }) }
     }
 
     @Test
