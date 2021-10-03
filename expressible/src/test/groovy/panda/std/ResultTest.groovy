@@ -49,14 +49,14 @@ final class ResultTest {
     void 'should catch exception in case of failure' () {
         def result = Result.attempt(Exception.class,() -> { throw new RuntimeException() } as ThrowingSupplier)
                 .mapErr(ex -> "error")
-
         assertTrue result.isErr()
         assertEquals "error", result.getError()
 
         def resultOk = Result.attempt(NumberFormatException.class as Class<Throwable>,() -> Integer.parseInt("1"))
-
         assertTrue resultOk.isOk()
         assertEquals(1, resultOk.get())
+
+        assertThrows AttemptFailedException.class, { Result.attempt(IllegalAccessException.class, { throw new RuntimeException("Gotcha") }) }
     }
 
     @Test
