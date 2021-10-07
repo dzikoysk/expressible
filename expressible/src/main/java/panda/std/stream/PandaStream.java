@@ -22,6 +22,7 @@ import panda.std.Pair;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,6 +50,25 @@ public class PandaStream<T> {
 
     public <R> PandaStream<R> stream(Function<Stream<T>, Stream<R>> function) {
         return new PandaStream<>(function.apply(stream));
+    }
+
+    public PandaStream<T> concat(Stream<T> stream) {
+        this.stream = Stream.concat(this.stream, stream);
+        return this;
+    }
+
+    public PandaStream<T> concat(PandaStream<T> pandaStream) {
+        this.stream = Stream.concat(this.stream, pandaStream.stream);
+        return this;
+    }
+
+    public PandaStream<T> concat(Iterable<T> iterable) {
+        return concat(PandaStream.of(iterable));
+    }
+
+    @SafeVarargs
+    public final PandaStream<T> concat(T... elements) {
+        return concat(Stream.of(elements));
     }
 
     public <R> PandaStream<R> transform(Function<Stream<T>, Stream<R>> function) {
@@ -171,6 +191,10 @@ public class PandaStream<T> {
 
     public Stream<T> toStream() {
         return stream;
+    }
+
+    public Iterator<T> iterator() {
+        return stream.iterator();
     }
 
     public static <T> PandaStream<T> of(Stream<T> stream) {
