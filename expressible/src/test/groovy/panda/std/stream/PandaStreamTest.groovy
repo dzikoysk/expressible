@@ -41,6 +41,18 @@ class PandaStreamTest {
     }
 
     @Test
+    void concat() {
+        def list = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "1", "2", "3")
+
+        assertEquals list, PandaStream.of(VALUES)
+                .concat(Stream.of("4", "5", "6"))
+                .concat("7", "8", "9")
+                .concat(PandaStream.of("10"))
+                .concat(VALUES)
+                .toList()
+    }
+
+    @Test
     void map() {
         assertArrayEquals NUMBERS, PandaStream.of(VALUES).map(value -> Integer.parseInt(value))
                 .sorted()
