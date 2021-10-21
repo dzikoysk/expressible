@@ -158,6 +158,11 @@ final class ResultTest {
     }
 
     @Test
+    void 'swap test'() {
+        assertEquals "test", ok("test").swap().getError()
+    }
+
+    @Test
     void 'should flat map result value' () {
         assertEquals 'flat', ok('flat').flatMap(value -> ok(value)).get()
     }

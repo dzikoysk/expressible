@@ -17,7 +17,7 @@
 package panda.std.function;
 
 @FunctionalInterface
-public interface ThrowingBiConsumer<A, B, E extends Exception> {
+public interface ThrowingBiConsumer<A, B, E extends Throwable> {
 
     void accept(A first, B second) throws E;
 

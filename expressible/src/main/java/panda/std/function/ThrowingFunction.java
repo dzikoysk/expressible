@@ -19,7 +19,7 @@ package panda.std.function;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface ThrowingFunction<T, R, E extends Exception> {
+public interface ThrowingFunction<T, R, E extends Throwable> {
 
     R apply(T t) throws E;
 
@@ -38,11 +38,11 @@ public interface ThrowingFunction<T, R, E extends Exception> {
      * @return a new function
      */
     @SuppressWarnings("unchecked")
-    static <T, R, E extends Exception> Function<T, R> asFunction(ThrowingFunction<T, R, E> function, Function<E, R> exceptionHandler) {
+    static <T, R, E extends Throwable> Function<T, R> asFunction(ThrowingFunction<T, R, E> function, Function<E, R> exceptionHandler) {
         return value -> {
             try {
                 return function.apply(value);
-            } catch (Exception exception) {
+            } catch (Throwable exception) {
                 return exceptionHandler.apply((E) exception);
             }
         };

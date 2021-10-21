@@ -19,11 +19,11 @@ package panda.std.function;
 import panda.std.Triple;
 
 @FunctionalInterface
-public interface ThrowingTriFunction<A, B, C, R, E extends Exception> {
+public interface ThrowingTriFunction<A, B, C, R, E extends Throwable> {
 
     R apply(A first, B second, C third) throws E;
 
-    static <A, B, C, R, E extends Exception> ThrowingTriFunction<A, B, C, Triple<A, B, C>, E> identity() {
+    static <A, B, C, R, E extends Throwable> ThrowingTriFunction<A, B, C, Triple<A, B, C>, E> identity() {
         return Triple::of;
     }
 
