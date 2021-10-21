@@ -17,7 +17,7 @@
 package panda.std.function;
 
 @FunctionalInterface
-public interface ThrowingTriConsumer<A, B, C, E extends Exception> {
+public interface ThrowingTriConsumer<A, B, C, E extends Throwable> {
 
     void accept(A first, B second, C third) throws E;
 

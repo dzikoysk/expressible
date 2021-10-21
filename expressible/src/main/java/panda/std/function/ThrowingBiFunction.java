@@ -17,7 +17,7 @@
 package panda.std.function;
 
 @FunctionalInterface
-public interface ThrowingBiFunction<A, B, R, E extends Exception> {
+public interface ThrowingBiFunction<A, B, R, E extends Throwable> {
 
     R apply(A first, B second) throws E;
 

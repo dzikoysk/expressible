@@ -17,7 +17,7 @@
 package panda.std.function;
 
 @FunctionalInterface
-public interface ThrowingQuadFunction<A, B, C, D, R, E extends Exception> {
+public interface ThrowingQuadFunction<A, B, C, D, R, E extends Throwable> {
 
     R apply(A a, B b, C c, D d) throws E;
 
