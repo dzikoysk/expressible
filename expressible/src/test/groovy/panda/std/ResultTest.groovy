@@ -158,6 +158,16 @@ final class ResultTest {
     }
 
     @Test
+    void 'swap test'() {
+        def result = ok("test").swap()
+
+        assertFalse result.isOk()
+        assertTrue result.isErr()
+        assertEquals "test", result.getError()
+        assertThrows NoSuchElementException.class, () -> result.get()
+    }
+
+    @Test
     void 'should flat map result value' () {
         assertEquals 'flat', ok('flat').flatMap(value -> ok(value)).get()
     }

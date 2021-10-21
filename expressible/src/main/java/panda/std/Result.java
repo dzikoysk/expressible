@@ -99,6 +99,10 @@ public class Result<VALUE, ERROR>  {
                 .map(type::cast);
     }
 
+    public Result<ERROR, VALUE> swap() {
+        return isOk() ? error(value) : ok(error);
+    }
+
     public Result<VALUE, ERROR> consume(Consumer<VALUE> valueConsumer, Consumer<ERROR> errorConsumer) {
         return this.peek(valueConsumer).onError(errorConsumer);
     }
