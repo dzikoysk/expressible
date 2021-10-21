@@ -159,12 +159,7 @@ final class ResultTest {
 
     @Test
     void 'swap test'() {
-        def result = ok("test").swap()
-
-        assertFalse result.isOk()
-        assertTrue result.isErr()
-        assertEquals "test", result.getError()
-        assertThrows NoSuchElementException.class, () -> result.get()
+        assertTrue ok("test").swap().isErr()
     }
 
     @Test
