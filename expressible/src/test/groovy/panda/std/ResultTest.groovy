@@ -159,7 +159,7 @@ final class ResultTest {
 
     @Test
     void 'swap test'() {
-        assertTrue ok("test").swap().isErr()
+        assertEquals "test", ok("test").swap().getError()
     }
 
     @Test
