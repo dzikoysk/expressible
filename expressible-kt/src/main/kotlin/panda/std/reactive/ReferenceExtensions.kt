@@ -1,6 +1,6 @@
 package panda.std.reactive
 
-import panda.std.reactive.Reference.Dependencies
+import panda.std.reactive.Reference.Dependencies.dependencies
 
 /* Convert object to reference */
 
@@ -20,4 +20,4 @@ fun <T : Any> mutableReference(value: T): MutableReference<T> =
  * Executes the given block whenever any of the given references have been updated
  */
 fun <T : Any> computed(vararg references: Reference<*>, block: () -> T): Reference<T> =
-    Reference.computed(Dependencies(*references), block)
+    Reference.computed(dependencies(*references), block)

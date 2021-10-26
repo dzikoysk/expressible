@@ -6,14 +6,21 @@ on:
     branches: [ main ]
 jobs:
   build:
+    name: "Build with JDK${{ matrix.jdk }}"
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Use both LTS releases and latest one
+        jdk: [ 8, 11, 17 ]
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
+      - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: ${{ matrix.jdk }}
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: false
