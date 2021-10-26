@@ -35,7 +35,7 @@ public class Reference<V> implements Publisher<Reference<V>, V> {
     }
 
     void set(V newValue) {
-        if (value == null) {
+        if (newValue == null) {
             throw new IllegalArgumentException("Reference does not support null values");
         }
 
@@ -51,18 +51,18 @@ public class Reference<V> implements Publisher<Reference<V>, V> {
 
     @Override
     public Reference<V> subscribe(Subscriber<? super V> subscriber) {
-        return subscribe((oldValue, newValue) -> subscriber.onComplete(newValue), false);
+        return subscribeDetailed((oldValue, newValue) -> subscriber.onComplete(newValue), false);
     }
 
     public Reference<V> subscribe(Subscriber<? super V> subscriber, boolean immediately) {
-        return subscribe((oldValue, newValue) -> subscriber.onComplete(newValue), immediately);
+        return subscribeDetailed((oldValue, newValue) -> subscriber.onComplete(newValue), immediately);
     }
 
-    public Reference<V> subscribe(DetailedSubscriber<? super V> subscriber) {
-        return subscribe(subscriber, false);
+    public Reference<V> subscribeDetailed(DetailedSubscriber<? super V> subscriber) {
+        return subscribeDetailed(subscriber, false);
     }
 
-    public Reference<V> subscribe(DetailedSubscriber<? super V> subscriber, boolean immediately) {
+    public Reference<V> subscribeDetailed(DetailedSubscriber<? super V> subscriber, boolean immediately) {
         if (immediately) {
             subscriber.onComplete(get(), get());
         }

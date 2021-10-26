@@ -17,8 +17,8 @@
 package panda.std.reactive;
 
 @FunctionalInterface
-public interface DetailedSubscriber<VALUE> {
+public interface DetailedSubscriber<V> {
 
-    void onComplete(VALUE oldValue, VALUE newValue);
+    void onComplete(V oldValue, V newValue);
 
 }
