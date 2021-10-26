@@ -18,6 +18,7 @@ package panda.std;
 
 import org.jetbrains.annotations.Nullable;
 import panda.std.function.ThrowingSupplier;
+import panda.std.reactive.Completable;
 import panda.std.stream.PandaStream;
 import panda.std.collection.SingletonIterator;
 

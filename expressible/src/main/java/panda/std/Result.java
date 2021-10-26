@@ -53,6 +53,7 @@ public class Result<VALUE, ERROR>  {
         return condition ? ok(value) : error(err);
     }
 
+    @SuppressWarnings("unchecked")
     public static <VALUE, ERROR extends Throwable> Result<VALUE, ERROR> attempt(Class<ERROR> exceptionType, ThrowingSupplier<VALUE, ERROR> supplier) throws AttemptFailedException {
         try {
             return Result.ok(supplier.get());

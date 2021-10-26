@@ -14,11 +14,28 @@
  * limitations under the License.
  */
 
-package panda.std;
+package panda.std.reactive;
 
-@FunctionalInterface
-public interface Publisher<TYPE, VALUE> {
+import java.util.function.Function;
 
-    TYPE subscribe(Subscriber<? super VALUE> subscriber);
+public class MutableReference<V> extends Reference<V> {
+
+    public MutableReference(V value) {
+        super(value);
+    }
+
+    public MutableReference<V> update(V value) {
+        set(value);
+        return this;
+    }
+
+    public MutableReference<V> update(Function<V, V> function) {
+        set(function.apply(get()));
+        return this;
+    }
+
+    public static <T> MutableReference<T> mutableReference(T value) {
+        return new MutableReference<>(value);
+    }
 
 }

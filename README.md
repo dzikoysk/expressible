@@ -8,7 +8,8 @@ Supported wrappers (in `panda.std.*` package):
 * `Result<Value, Error>` - solve error handling gracfully
 * `Option<Value>` - enhanced alternative to standard `Optional<Value>
 * `Lazy<Value>` - lazy values & runners
-* `Completable<Value>` with `Publisher & Subscriber` pattern - synchornized alternative to `CompletableFuture<Value>`
+* `Completable<Value>` with `Publisher & Subscriber` pattern - synchronized alternative to `CompletableFuture<Value>`
+* Simple reactive containers - `Reference<V>`, `MutableReference<V>`, `Computed`
 * `Mono<A>`, `Pair<A, B>`, `Triple<A, B, C>`, `Quad<A, B, C, D>` - generic wrappers for set of values
 * Throwing functions, runnables, suppliers and consumers - set of functional interfaces with support for exception signatures
 * Tri and Quad consumers, functions and predicates - additional functional interfaces
@@ -22,10 +23,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.panda-lang:expressible:1.0.18") // Core library
-    implementation("org.panda-lang:expressible-kt:1.0.18") // Kotlin extensions
-    implementation("org.panda-lang:expressible-kt-coroutines:1.0.18") // Kotlin coroutines extensions
-    testImplementation("org.panda-lang:expressible-junit:1.0.18") // JUnit extensions
+    implementation("org.panda-lang:expressible:1.1.0") // Core library
+    implementation("org.panda-lang:expressible-kt:1.1.0") // Kotlin extensions
+    implementation("org.panda-lang:expressible-kt-coroutines:1.1.0") // Kotlin coroutines extensions
+    testImplementation("org.panda-lang:expressible-junit:1.1.0") // JUnit extensions
 }
 ```
 
@@ -102,6 +103,17 @@ completable
 completable.complete("true");
 ```
 
+#### Reactive
+
+```java
+Reference<Integer> a = reference(1);
+MutableReference<Integer> b = mutableReference(2);
+Computed<Integer> result = computed(dependencies(a, b), () -> a.get() + b.get());
+
+result.subscribe(value -> System.out.println(value));
+b.update(3); // prints "4"
+```
+
 #### Panda Stream
 
 ```java
@@ -113,6 +125,6 @@ PandaStream<String> standard = PandaStream.of(new ArrayList<>().stream());
 
 * [Panda Organization](https://github.com/panda-lang) ([Panda](https://github.com/panda-lang/panda), [Hub](https://github.com/panda-lang/hub), [Light](https://github.com/panda-lang))
 * [Reposilite](https://github.com/dzikoysk/reposilite)
-* Utilities like [CDN](https://github.com/dzikoysk/cdn), [Dependency-Injector](https://github.com/dzikoysk/dependency-injector)
+* Libraries like [CDN](https://github.com/dzikoysk/cdn), [Dependency-Injector](https://github.com/dzikoysk/dependency-injector)
 * [FunnyGuilds Organization](https://github.com/FunnyGuilds) ([FunnyGuilds](https://github.com/FunnyGuilds/FunnyGuilds), [FunnyCommands](https://github.com/FunnyGuilds/FunnyCommands))
 * Private projects and API consumers of the given libraries

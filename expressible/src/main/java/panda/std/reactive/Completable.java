@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package panda.std;
+package panda.std.reactive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Observable container for value that could be computed in the future.
+ * This container is similar to {@link java.util.concurrent.CompletableFuture}, but without the concurrency layer.
+ *
+ * @param <VALUE> type of value to store
+ */
 public class Completable<VALUE> implements Publisher<Completable<VALUE>, VALUE> {
 
     private VALUE value;

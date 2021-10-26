@@ -1,7 +1,8 @@
 package panda.std
 
-import com.sun.org.apache.xpath.internal.operations.Bool
+
 import org.junit.jupiter.api.Test
+import panda.std.reactive.Completable
 
 import static java.lang.Boolean.parseBoolean
 import static org.junit.jupiter.api.Assertions.assertEquals

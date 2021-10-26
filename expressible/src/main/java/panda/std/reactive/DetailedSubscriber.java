@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package panda.std;
+package panda.std.reactive;
 
 @FunctionalInterface
-public interface Subscriber<VALUE> {
+public interface DetailedSubscriber<VALUE> {
 
-    void onComplete(VALUE value);
+    void onComplete(VALUE oldValue, VALUE newValue);
 
 }

@@ -19,6 +19,12 @@ package panda.std;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * Represents a conditional entry
+ *
+ * @param <T> type of value to process
+ * @param <R> type of result value
+ */
 public class Case<T, R> {
 
     private final Predicate<T> condition;
