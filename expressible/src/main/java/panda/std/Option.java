@@ -16,6 +16,7 @@
 
 package panda.std;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import panda.std.function.ThrowingSupplier;
 import panda.std.reactive.Completable;
@@ -49,6 +50,10 @@ public class Option<T> implements Iterable<T>, Serializable {
     @SuppressWarnings("unchecked")
     public static <T> Option<T> none() {
         return (Option<T>) NONE;
+    }
+
+    public static Option<Unit> unit() {
+        return Option.of(Unit.UNIT);
     }
 
     public static <T> Option<T> of(@Nullable T value) {

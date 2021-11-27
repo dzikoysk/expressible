@@ -16,6 +16,7 @@
 
 package panda.std.reactive;
 
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 public class MutableReference<V> extends Reference<V> {
@@ -34,7 +35,7 @@ public class MutableReference<V> extends Reference<V> {
         return this;
     }
 
-    public static <T> MutableReference<T> mutableReference(T value) {
+    public static <T> @NotNull MutableReference<T> mutableReference(T value) {
         return new MutableReference<>(value);
     }
 

@@ -16,6 +16,7 @@
 
 package panda.std;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import panda.std.function.ThrowingFunction;
 import panda.std.function.ThrowingSupplier;
@@ -27,34 +28,53 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+/**
+ * {@link panda.std.Result} represents value or associated error that caused the absence of the expected value.
+ * By definition, Result has to contain one non-null value - the value or the error.
+ * If you want to use nullable value or nullable error, you have to use wrapper like {@link panda.std.Option} to explicitly declare it.
+ *
+ * @param <VALUE> type of value
+ * @param <ERROR> type of error
+ */
 public class Result<VALUE, ERROR>  {
 
     private final VALUE value;
     private final ERROR error;
 
     private Result(@Nullable VALUE value, @Nullable ERROR error) {
+        if (value == null && error == null) {
+            throw new IllegalStateException("Value and error are null - Cannot determine state of Result");
+        }
+
+        if (value != null && error != null) {
+            throw new IllegalStateException("Value and error are not null - Cannot determine state of Result");
+        }
+
         this.value = value;
         this.error = error;
     }
 
-    public static <VALUE, ERROR> Result<VALUE, ERROR> ok(VALUE value) {
+    public static <VALUE, ERROR> @NotNull Result<VALUE, ERROR> ok(@NotNull VALUE value) {
         return new Result<>(value, null);
     }
 
-    public static <VALUE, ERROR> Result<VALUE, ERROR> error(ERROR err) {
+    public static <VALUE, ERROR> @NotNull Result<VALUE, ERROR> error(@NotNull ERROR err) {
         return new Result<>(null, err);
     }
 
-    public static <VALUE, ERROR> Result<VALUE, ERROR> when(boolean condition, Supplier<VALUE> value, Supplier<ERROR> err) {
+    public static <VALUE, ERROR> @NotNull Result<VALUE, ERROR> when(boolean condition, @NotNull Supplier<@NotNull VALUE> value, @NotNull Supplier<@NotNull ERROR> err) {
         return condition ? ok(value.get()) : error(err.get());
     }
 
-    public static <VALUE, ERROR> Result<VALUE, ERROR> when(boolean condition, VALUE value, ERROR err) {
+    public static <VALUE, ERROR> @NotNull Result<VALUE, ERROR> when(boolean condition, @NotNull VALUE value, @NotNull ERROR err) {
         return condition ? ok(value) : error(err);
     }
 
     @SuppressWarnings("unchecked")
-    public static <VALUE, ERROR extends Throwable> Result<VALUE, ERROR> attempt(Class<ERROR> exceptionType, ThrowingSupplier<VALUE, ERROR> supplier) throws AttemptFailedException {
+    public static <VALUE, ERROR extends Throwable> @NotNull Result<VALUE, ERROR> attempt(
+            @NotNull Class<ERROR> exceptionType,
+            @NotNull ThrowingSupplier<@NotNull VALUE, @NotNull ERROR> supplier
+    ) throws AttemptFailedException {
         try {
             return Result.ok(supplier.get());
         } catch (Throwable throwable) {
@@ -66,73 +86,73 @@ public class Result<VALUE, ERROR>  {
         }
     }
 
-    public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> map(Function<VALUE, MAPPED_VALUE> function) {
-        return isOk() ? ok(function.apply(value)) : projectToError();
+    public <MAPPED_VALUE> @NotNull Result<MAPPED_VALUE, ERROR> map(@NotNull Function<@NotNull VALUE, @NotNull MAPPED_VALUE> function) {
+        return isOk() ? ok(function.apply(get())) : projectToError();
     }
 
-    public <MAPPED_ERROR> Result<VALUE, MAPPED_ERROR> mapErr(Function<ERROR, MAPPED_ERROR> function) {
-        return isOk() ? projectToValue() : error(function.apply(error));
+    public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> mapErr(@NotNull Function<@NotNull ERROR, @NotNull MAPPED_ERROR> function) {
+        return isOk() ? projectToValue() : error(function.apply(getError()));
     }
 
-    public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> flatMap(Function<VALUE, Result<MAPPED_VALUE, ERROR>> function) {
-        return isOk() ? function.apply(value) : projectToError();
+    public <MAPPED_VALUE> @NotNull Result<MAPPED_VALUE, ERROR> flatMap(@NotNull Function<@NotNull VALUE, @NotNull Result<MAPPED_VALUE, ERROR>> function) {
+        return isOk() ? function.apply(get()) : projectToError();
     }
 
-    public <MAPPED_ERROR> Result<VALUE, MAPPED_ERROR> flatMapErr(Function<ERROR, Result<VALUE, MAPPED_ERROR>> function) {
-        return isErr() ? function.apply(error) : projectToValue();
+    public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> flatMapErr(@NotNull Function<@NotNull ERROR, @NotNull Result<VALUE, MAPPED_ERROR>> function) {
+        return isErr() ? function.apply(getError()) : projectToValue();
     }
 
-    public Result<VALUE, ERROR> filter(Predicate<VALUE> predicate, Function<VALUE, ERROR> errorSupplier) {
-        return isOk() && !predicate.test(value) ? error(errorSupplier.apply(value)) : this;
+    public @NotNull Result<VALUE, ERROR> filter(@NotNull Predicate<@NotNull VALUE> predicate, @NotNull Function<@NotNull VALUE, @NotNull ERROR> errorSupplier) {
+        return isOk() && !predicate.test(get()) ? error(errorSupplier.apply(get())) : this;
     }
 
-    public Result<VALUE, ERROR> filterNot(Predicate<VALUE> predicate, Function<VALUE, ERROR> errorSupplier) {
+    public @NotNull Result<VALUE, ERROR> filterNot(@NotNull Predicate<VALUE> predicate, @NotNull Function<VALUE, ERROR> errorSupplier) {
         return filter(value -> !predicate.test(value), errorSupplier);
     }
 
-    public <COMMON> COMMON fold(Function<VALUE, COMMON> valueMerge, Function<ERROR, COMMON> errorMerge) {
+    public <COMMON> COMMON fold(@NotNull Function<@NotNull VALUE, COMMON> valueMerge, @NotNull Function<@NotNull ERROR, COMMON> errorMerge) {
         return isOk() ? valueMerge.apply(get()) : errorMerge.apply(getError());
     }
 
-    public <MAPPED_VALUE> Result<MAPPED_VALUE, ERROR> is(Class<MAPPED_VALUE> type, Function<VALUE, ERROR> errorSupplier) {
+    public <MAPPED_VALUE> @NotNull Result<MAPPED_VALUE, ERROR> is(@NotNull Class<MAPPED_VALUE> type, @NotNull Function<@NotNull VALUE, @NotNull ERROR> errorSupplier) {
         return this
                 .filter(type::isInstance, errorSupplier)
                 .map(type::cast);
     }
 
-    public Result<ERROR, VALUE> swap() {
-        return isOk() ? error(value) : ok(error);
+    public @NotNull Result<ERROR, VALUE> swap() {
+        return isOk() ? error(get()) : ok(getError());
     }
 
-    public Result<VALUE, ERROR> consume(Consumer<VALUE> valueConsumer, Consumer<ERROR> errorConsumer) {
+    public Result<VALUE, ERROR> consume(@NotNull Consumer<@NotNull VALUE> valueConsumer, @NotNull Consumer<@NotNull ERROR> errorConsumer) {
         return this.peek(valueConsumer).onError(errorConsumer);
     }
 
-    public <REQUIRED_ERROR>  Result<VALUE, REQUIRED_ERROR> projectToValue() {
+    public <REQUIRED_ERROR> @NotNull Result<VALUE, REQUIRED_ERROR> projectToValue() {
         if (isErr()) {
             throw new IllegalStateException("Cannot project result with error to value");
         }
 
-        return ok(value);
+        return ok(get());
     }
 
-    public <REQUIRED_VALUE> Result<REQUIRED_VALUE, ERROR> projectToError() {
+    public <REQUIRED_VALUE> @NotNull Result<REQUIRED_VALUE, ERROR> projectToError() {
         if (isOk()) {
             throw new IllegalStateException("Cannot project result with value to error");
         }
 
-        return error(error);
+        return error(getError());
     }
 
-    public Result<VALUE, ERROR> orElse(Function<ERROR, Result<VALUE, ERROR>> orElse) {
-        return isOk() ? this : orElse.apply(error);
+    public @NotNull Result<VALUE, ERROR> orElse(@NotNull Function<@NotNull ERROR, @NotNull Result<VALUE, ERROR>> orElse) {
+        return isOk() ? this : orElse.apply(getError());
     }
 
-    public VALUE orElseGet(Function<ERROR, VALUE> orElse) {
-        return isOk() ? value : orElse.apply(error);
+    public @NotNull VALUE orElseGet(@NotNull Function<@NotNull ERROR, @NotNull VALUE> orElse) {
+        return isOk() ? get() : orElse.apply(getError());
     }
 
-    public <T extends Exception> VALUE orElseThrow(ThrowingFunction<ERROR, T, T> consumer) throws T {
+    public <T extends Exception> @NotNull VALUE orElseThrow(@NotNull ThrowingFunction<@NotNull ERROR, @NotNull T, @NotNull T> consumer) throws T {
         if (isOk()) {
             return get();
         }
@@ -140,17 +160,17 @@ public class Result<VALUE, ERROR>  {
         throw consumer.apply(getError());
     }
 
-    public Result<VALUE, ERROR> peek(Consumer<VALUE> consumer) {
+    public @NotNull Result<VALUE, ERROR> peek(@NotNull Consumer<@NotNull VALUE> consumer) {
         if (isOk()) {
-            consumer.accept(value);
+            consumer.accept(get());
         }
 
         return this;
     }
 
-    public Result<VALUE, ERROR> onError(Consumer<ERROR> consumer) {
+    public @NotNull Result<VALUE, ERROR> onError(@NotNull Consumer<@NotNull ERROR> consumer) {
         if (isErr()) {
-            consumer.accept(error);
+            consumer.accept(getError());
         }
 
         return this;
@@ -164,32 +184,33 @@ public class Result<VALUE, ERROR>  {
         return error != null;
     }
 
-    public VALUE get() {
-        if (isErr()) {
+    public @NotNull VALUE get() {
+        if (value == null) {
             throw new NoSuchElementException("No value present");
         }
 
         return value;
     }
 
-    public ERROR getError() {
-        if (isOk()) {
+    public @NotNull ERROR getError() {
+        if (error == null) {
             throw new NoSuchElementException("No error present");
         }
 
         return error;
     }
 
-    public Object getAny() {
+    public @NotNull Object getAny() {
+        //noinspection ConstantConditions
         return isOk() ? value : error;
     }
 
     @SuppressWarnings("unchecked")
-    public <AS> AS getAnyAs() {
+    public <AS> @NotNull AS getAnyAs() {
         return (AS) getAny();
     }
 
-    public Option<VALUE> toOption() {
+    public @NotNull Option<VALUE> toOption() {
         return Option.of(value);
     }
 

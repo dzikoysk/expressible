@@ -16,6 +16,7 @@
 
 package panda.std.reactive;
 
+import org.jetbrains.annotations.NotNull;
 import panda.std.Option;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,7 +93,7 @@ public class Reference<V> implements Publisher<Reference<V>, V> {
         return (Class<V>) value.getClass();
     }
 
-    public static <T> Reference<T> reference(T value) {
+    public static <T> @NotNull Reference<T> reference(T value) {
         return new Reference<>(value);
     }
 
@@ -114,7 +115,7 @@ public class Reference<V> implements Publisher<Reference<V>, V> {
 
     }
 
-    public static <T> Reference<T> computed(Dependencies dependencies, Supplier<T> recalculateFunction) {
+    public static <T> @NotNull Reference<T> computed(Dependencies dependencies, Supplier<T> recalculateFunction) {
         Reference<T> computed = reference(recalculateFunction.get());
         dependencies.references.forEach(reference -> reference.subscribe(newValue -> computed.set(recalculateFunction.get())));
         return computed;
