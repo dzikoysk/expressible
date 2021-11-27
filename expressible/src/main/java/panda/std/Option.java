@@ -178,11 +178,15 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() ? this : of(value);
     }
 
-    public Option<T> orElse(Option<T> value) {
+    public Option<T> orElse(Supplier<T> supplier) {
+        return isDefined() ? this : Option.of(supplier.get());
+    }
+
+    public Option<T> orFlatElse(Option<T> value) {
         return isDefined() ? this : value;
     }
 
-    public Option<T> orElse(Supplier<Option<T>> supplier) {
+    public Option<T> orFlatElse(Supplier<Option<T>> supplier) {
         return isDefined() ? this : supplier.get();
     }
 

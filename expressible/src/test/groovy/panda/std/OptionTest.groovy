@@ -99,11 +99,14 @@ final class OptionTest {
         assertEquals 'else', none().orElse('else').get()
         assertEquals 'value', of('value').orElse('else').get()
 
-        assertEquals 'else', none().orElse(of('else')).get()
-        assertEquals 'value', of('value').orElse(of('else')).get()
+        assertEquals 'else', none().orElse({ 'else' } as Supplier).get()
+        assertEquals 'value', of('value').orElse({ 'else' } as Supplier).get()
 
-        assertEquals 'else', none().orElse({ of('else') } as Supplier).get()
-        assertEquals 'value', of('value').orElse({ of('else') } as Supplier).get()
+        assertEquals 'else', none().orFlatElse(of('else')).get()
+        assertEquals 'value', of('value').orFlatElse(of('else')).get()
+
+        assertEquals 'else', none().orFlatElse({ of('else') } as Supplier).get()
+        assertEquals 'value', of('value').orFlatElse({ of('else') } as Supplier).get()
     }
 
     @Test
