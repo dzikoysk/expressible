@@ -58,8 +58,16 @@ public class Result<VALUE, ERROR>  {
         return new Result<>(value, null);
     }
 
+    public static <ERROR> @NotNull Result<Unit, ERROR> ok() {
+        return new Result<>(Unit.UNIT, null);
+    }
+
     public static <VALUE, ERROR> @NotNull Result<VALUE, ERROR> error(@NotNull ERROR err) {
         return new Result<>(null, err);
+    }
+
+    public static <VALUE> @NotNull Result<VALUE, Unit> error() {
+        return new Result<>(null, Unit.UNIT);
     }
 
     public static <VALUE, ERROR> @NotNull Result<VALUE, ERROR> when(boolean condition, @NotNull Supplier<@NotNull VALUE> value, @NotNull Supplier<@NotNull ERROR> err) {
