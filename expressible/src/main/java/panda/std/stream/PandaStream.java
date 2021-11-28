@@ -118,7 +118,7 @@ public class PandaStream<T> {
         return with(stream.filter(obj -> !predicate.test(obj)));
     }
 
-    public <E> Result<PandaStream<T>, E> filterByResult(Function<T, Option<E>> predicate) {
+    public <E> Result<PandaStream<T>, E> filterToResult(Function<T, Option<E>> predicate) {
         return findIterating(predicate)
                 .map(Result::<PandaStream<T>, E> error)
                 .orElseGet(Result.ok(this));
