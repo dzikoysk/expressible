@@ -202,7 +202,7 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() ? value : elseValue;
     }
 
-    public T orElseGetSupply(Supplier<T> supplier) {
+    public T orElseGet(Supplier<T> supplier) {
         return isDefined() ? value : supplier.get();
     }
 

@@ -120,8 +120,8 @@ final class OptionTest {
         assertEquals 'else', none().orElseGet('else')
         assertEquals 'value', of('value').orElseGet('else')
         
-        assertEquals 'else', none().orElseGetSupply({ 'else' } as Supplier)
-        assertEquals 'value', of('value').orElseGetSupply({ 'else' } as Supplier)
+        assertEquals 'else', none().orElseGet({ 'else' } as Supplier)
+        assertEquals 'value', of('value').orElseGet({ 'else' } as Supplier)
     }
 
     @Test
