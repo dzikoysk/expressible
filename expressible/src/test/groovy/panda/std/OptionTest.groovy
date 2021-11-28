@@ -99,14 +99,14 @@ final class OptionTest {
         assertEquals 'else', none().orElse('else').get()
         assertEquals 'value', of('value').orElse('else').get()
 
-        assertEquals 'else', none().orElse({ 'else' } as Supplier).get()
-        assertEquals 'value', of('value').orElse({ 'else' } as Supplier).get()
+        assertEquals 'else', none().orElseSupply({ 'else' } as Supplier).get()
+        assertEquals 'value', of('value').orElseSupply({ 'else' } as Supplier).get()
 
-        assertEquals 'else', none().orFlatElse(of('else')).get()
-        assertEquals 'value', of('value').orFlatElse(of('else')).get()
+        assertEquals 'else', none().orElse(of('else')).get()
+        assertEquals 'value', of('value').orElse(of('else')).get()
 
-        assertEquals 'else', none().orFlatElse({ of('else') } as Supplier).get()
-        assertEquals 'value', of('value').orFlatElse({ of('else') } as Supplier).get()
+        assertEquals 'else', none().orElse({ of('else') } as Supplier).get()
+        assertEquals 'value', of('value').orElse({ of('else') } as Supplier).get()
     }
 
     @Test
@@ -120,8 +120,8 @@ final class OptionTest {
         assertEquals 'else', none().orElseGet('else')
         assertEquals 'value', of('value').orElseGet('else')
         
-        assertEquals 'else', none().orElseGet({ 'else' } as Supplier)
-        assertEquals 'value', of('value').orElseGet({ 'else' } as Supplier)
+        assertEquals 'else', none().orElseGetSupply({ 'else' } as Supplier)
+        assertEquals 'value', of('value').orElseGetSupply({ 'else' } as Supplier)
     }
 
     @Test

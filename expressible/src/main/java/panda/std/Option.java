@@ -178,16 +178,16 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() ? this : of(value);
     }
 
-    public Option<T> orElse(Supplier<T> supplier) {
-        return isDefined() ? this : Option.of(supplier.get());
-    }
-
-    public Option<T> orFlatElse(Option<T> value) {
+    public Option<T> orElse(Option<T> value) {
         return isDefined() ? this : value;
     }
 
-    public Option<T> orFlatElse(Supplier<Option<T>> supplier) {
+    public Option<T> orElse(Supplier<Option<T>> supplier) {
         return isDefined() ? this : supplier.get();
+    }
+
+    public Option<T> orElseSupply(Supplier<T> supplier) {
+        return isDefined() ? this : Option.of(supplier.get());
     }
 
     public <E extends Throwable> T orThrow(Supplier<E> exceptionSupplier) throws E {
@@ -202,7 +202,7 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() ? value : elseValue;
     }
 
-    public T orElseGet(Supplier<T> supplier) {
+    public T orElseGetSupply(Supplier<T> supplier) {
         return isDefined() ? value : supplier.get();
     }
 
