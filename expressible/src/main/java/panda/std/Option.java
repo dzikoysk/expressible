@@ -186,6 +186,10 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() ? this : supplier.get();
     }
 
+    public Option<T> orElseSupply(Supplier<T> supplier) {
+        return isDefined() ? this : Option.of(supplier.get());
+    }
+
     public <E extends Throwable> T orThrow(Supplier<E> exceptionSupplier) throws E {
         if (isEmpty()) {
             throw exceptionSupplier.get();
@@ -198,7 +202,7 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() ? value : elseValue;
     }
 
-    public T orElseGet(Supplier<T> supplier) {
+    public T orElseGetSupply(Supplier<T> supplier) {
         return isDefined() ? value : supplier.get();
     }
 
