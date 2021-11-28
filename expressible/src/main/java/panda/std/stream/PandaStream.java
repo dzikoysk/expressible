@@ -39,6 +39,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * Simple wrapper to combine standard {@link java.util.stream.Stream} API with wrappers like
+ * {@link panda.std.Option} or {@link panda.std.Result}, and some extra features.
+ * Most methods are lazy evaluated as in Stream API, but some of them are not!
+ * In most cases it shouldn't be a problem, but for huge sets or performance sensitive use-cases
+ * you should be aware of methods you use, especially these based on {@link #duplicate()} feature.
+ *
+ * @param <T>
+ */
 public class PandaStream<T> {
 
     private Stream<T> stream;
@@ -198,7 +207,7 @@ public class PandaStream<T> {
     }
 
     public <R> Option<R> findIterating(Function<T, Option<R>> predicate) {
-        Iterator<T> iterator = stream.iterator();
+        Iterator<T> iterator = duplicate().iterator();
 
         while (iterator.hasNext()) {
             T element = iterator.next();
@@ -210,6 +219,19 @@ public class PandaStream<T> {
         }
 
         return Option.none();
+    }
+
+    /**
+     * Simulates the stream duplication mechanism.
+     * The method transforms current stream into buffered list of elements and then recreates current stream and the duplicated one on top of that.
+     * This method should not be used to handle huge sets and may be a bottleneck if called often.
+     *
+     * @return duplicated stream
+     */
+    public PandaStream<T> duplicate() {
+        List<T> buffer = toList();
+        stream = buffer.stream();
+        return of(buffer);
     }
 
     public T[] toArray(IntFunction<T[]> function) {
