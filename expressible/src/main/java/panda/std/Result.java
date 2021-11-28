@@ -23,6 +23,7 @@ import panda.std.function.ThrowingSupplier;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -92,6 +93,17 @@ public class Result<VALUE, ERROR>  {
 
             throw new AttemptFailedException(throwable);
         }
+    }
+
+    public static <VALUE> @NotNull Result<VALUE, Exception> attempt(@NotNull ThrowingSupplier<@NotNull VALUE, @NotNull Exception> supplier) {
+        return attempt(Exception.class, supplier);
+    }
+
+    public <SECOND_VALUE, R> @NotNull Result<R, ERROR> merge(
+            @NotNull Result<SECOND_VALUE, ? extends ERROR> second,
+            @NotNull BiFunction<@NotNull VALUE, @NotNull SECOND_VALUE, @NotNull R> mergeFunction
+    ) {
+        return flatMap(firstValue -> second.map(secondValue -> mergeFunction.apply(firstValue, secondValue)));
     }
 
     public <MAPPED_VALUE> @NotNull Result<MAPPED_VALUE, ERROR> map(@NotNull Function<@NotNull VALUE, @NotNull MAPPED_VALUE> function) {
