@@ -116,7 +116,7 @@ class PandaStreamTest {
     @Test
     void toMap() {
         def map = PandaStream.of(VALUES)
-                .toMap((text) -> Pair.of(text, Integer.parseInt(text)))
+                .toMapByPair((text) -> Pair.of(text, Integer.parseInt(text)))
 
         assertEquals 1, map.get("1")
         assertEquals 2, map.get("2")

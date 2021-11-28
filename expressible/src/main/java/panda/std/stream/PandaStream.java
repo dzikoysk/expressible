@@ -23,6 +23,7 @@ import panda.std.Result;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -223,11 +225,19 @@ public class PandaStream<T> {
     }
 
     public <K, V> Map<K, V> toMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
-        return stream.collect(Collectors.toMap(keyMapper, valueMapper));
+        return toMap(HashMap::new, keyMapper, valueMapper);
     }
 
-    public <K, V> Map<K, V> toMap(Function<T, Pair<K, V>> mapper) {
-        return toMap(key -> mapper.apply(key).getFirst(), value -> mapper.apply(value).getSecond());
+    public <K, V> Map<K, V> toMap(Supplier<Map<K, V>> mapSupplier, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+        return stream.collect(Collectors.toMap(keyMapper, valueMapper, PandaCollectors.throwingMerger(), mapSupplier));
+    }
+
+    public <K, V> Map<K, V> toMapByPair(Supplier<Map<K, V>> mapSupplier, Function<T, Pair<K, V>> mapper) {
+        return toMap(mapSupplier, key -> mapper.apply(key).getFirst(), value -> mapper.apply(value).getSecond());
+    }
+
+    public <K, V> Map<K, V> toMapByPair(Function<T, Pair<K, V>> mapper) {
+        return toMapByPair(HashMap::new, mapper);
     }
 
     public Stream<T> toStream() {

@@ -5,7 +5,7 @@
     <groupId>org.panda-lang</groupId>
     <artifactId>expressible-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
     <modules>
         <module>expressible</module>
         <module>expressible-kt</module>
@@ -14,7 +14,7 @@
     </modules>
 
     <properties>
-        <expressible.version>1.1.4</expressible.version>
+        <expressible.version>1.1.5</expressible.version>
         <kotlin.version>1.5.31</kotlin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -40,12 +40,12 @@
             <dependency>
                 <groupId>org.panda-lang</groupId>
                 <artifactId>expressible</artifactId>
-                <version>1.1.4</version>
+                <version>1.1.5</version>
             </dependency>
             <dependency>
                 <groupId>org.panda-lang</groupId>
                 <artifactId>expressible-kt</artifactId>
-                <version>1.1.4</version>
+                <version>1.1.5</version>
             </dependency>
 
             <dependency>
