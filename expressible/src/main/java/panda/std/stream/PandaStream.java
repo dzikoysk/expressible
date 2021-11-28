@@ -18,6 +18,7 @@ package panda.std.stream;
 
 import panda.std.Option;
 import panda.std.Pair;
+import panda.std.Result;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -41,11 +43,6 @@ public class PandaStream<T> {
 
     private PandaStream(Stream<T> stream) {
         this.stream = stream;
-    }
-
-    public PandaStream<T> forEach(Consumer<? super T> consumer) {
-        stream.forEach(consumer);
-        return this;
     }
 
     public <R> PandaStream<R> stream(Function<Stream<T>, Stream<R>> function) {
@@ -71,12 +68,20 @@ public class PandaStream<T> {
         return concat(Stream.of(elements));
     }
 
+    public <R> PandaStream<Pair<T, R>> associateWith(R value) {
+        return map(element -> Pair.of(element, value));
+    }
+
     public <R> PandaStream<R> transform(Function<Stream<T>, Stream<R>> function) {
         return stream(function);
     }
 
     public <R> PandaStream<R> map(Function<T, R> function) {
         return new PandaStream<>(stream.map(function));
+    }
+
+    public <A, R> PandaStream<R> mapWith(A with, BiFunction<A, T, R> function) {
+        return map(element -> function.apply(with, element));
     }
 
     public <R> PandaStream<R> mapOpt(Function<T, Option<R>> function) {
@@ -87,6 +92,10 @@ public class PandaStream<T> {
 
     public <R> PandaStream<R> flatMap(Function<T, Iterable<R>> function) {
         return new PandaStream<>(stream.flatMap(value -> StreamSupport.stream(function.apply(value).spliterator(), false)));
+    }
+
+    public <A, R> PandaStream<R> flatMapWith(A with, BiFunction<A, T, Iterable<R>> function) {
+        return flatMap(element -> function.apply(with, element));
     }
 
     public <R> PandaStream<R> flatMapStream(Function<T, Stream<R>> function) {
@@ -105,6 +114,12 @@ public class PandaStream<T> {
 
     public PandaStream<T> filterNot(Predicate<T> predicate) {
         return with(stream.filter(obj -> !predicate.test(obj)));
+    }
+
+    public <E> Result<PandaStream<T>, E> filterByResult(Function<T, Option<E>> predicate) {
+        return findIterating(predicate)
+                .map(Result::<PandaStream<T>, E> error)
+                .orElseGet(Result.ok(this));
     }
 
     public PandaStream<T> distinct() {
@@ -167,6 +182,32 @@ public class PandaStream<T> {
 
     public PandaStream<T> takeWhile(Predicate<T> condition) {
         return new PandaStream<>(StreamSupport.stream(new TakeWhileSpliterator<>(stream.spliterator(), condition), false));
+    }
+
+    public PandaStream<T> forEach(Consumer<? super T> consumer) {
+        stream.forEach(consumer);
+        return this;
+    }
+
+    public <E> Result<PandaStream<T>, E> forEachByResult(Function<T, Option<E>> predicate) {
+        return findIterating(predicate)
+                .map(Result::<PandaStream<T>, E> error)
+                .orElseGet(Result.ok(this));
+    }
+
+    public <R> Option<R> findIterating(Function<T, Option<R>> predicate) {
+        Iterator<T> iterator = stream.iterator();
+
+        while (iterator.hasNext()) {
+            T element = iterator.next();
+            Option<R> result = predicate.apply(element);
+
+            if (result.isDefined()) {
+                return result;
+            }
+        }
+
+        return Option.none();
     }
 
     public T[] toArray(IntFunction<T[]> function) {

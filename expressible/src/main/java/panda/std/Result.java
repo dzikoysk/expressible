@@ -80,7 +80,7 @@ public class Result<VALUE, ERROR>  {
 
     @SuppressWarnings("unchecked")
     public static <VALUE, ERROR extends Throwable> @NotNull Result<VALUE, ERROR> attempt(
-            @NotNull Class<ERROR> exceptionType,
+            @NotNull Class<? extends ERROR> exceptionType,
             @NotNull ThrowingSupplier<@NotNull VALUE, @NotNull ERROR> supplier
     ) throws AttemptFailedException {
         try {
@@ -98,16 +98,26 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? ok(function.apply(get())) : projectToError();
     }
 
+    public @NotNull Result<Unit, ERROR> mapToUnit() {
+        return isOk() ? ok() : projectToError();
+    }
+
     public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> mapErr(@NotNull Function<@NotNull ERROR, @NotNull MAPPED_ERROR> function) {
         return isOk() ? projectToValue() : error(function.apply(getError()));
     }
 
-    public <MAPPED_VALUE> @NotNull Result<MAPPED_VALUE, ERROR> flatMap(@NotNull Function<@NotNull VALUE, @NotNull Result<MAPPED_VALUE, ERROR>> function) {
-        return isOk() ? function.apply(get()) : projectToError();
+    public <MAPPED_VALUE> @NotNull Result<MAPPED_VALUE, ERROR> flatMap(@NotNull Function<@NotNull VALUE, @NotNull Result<MAPPED_VALUE, ? extends ERROR>> function) {
+        //noinspection unchecked
+        return isOk()
+                ? (Result<MAPPED_VALUE, ERROR>) function.apply(get())
+                : projectToError();
     }
 
-    public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> flatMapErr(@NotNull Function<@NotNull ERROR, @NotNull Result<VALUE, MAPPED_ERROR>> function) {
-        return isErr() ? function.apply(getError()) : projectToValue();
+    public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> flatMapErr(@NotNull Function<@NotNull ERROR, @NotNull Result<? extends VALUE, MAPPED_ERROR>> function) {
+        //noinspection unchecked
+        return isErr()
+                ? (Result<VALUE, MAPPED_ERROR>) function.apply(getError())
+                : projectToValue();
     }
 
     public @NotNull Result<VALUE, ERROR> filter(@NotNull Predicate<@NotNull VALUE> predicate, @NotNull Function<@NotNull VALUE, @NotNull ERROR> errorSupplier) {
@@ -220,6 +230,10 @@ public class Result<VALUE, ERROR>  {
 
     public @NotNull Option<VALUE> toOption() {
         return Option.of(value);
+    }
+
+    public @NotNull Option<ERROR> errorToOption() {
+        return Option.of(error);
     }
 
     public @Nullable VALUE orNull() {

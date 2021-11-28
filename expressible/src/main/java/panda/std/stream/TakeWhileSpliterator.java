@@ -16,6 +16,8 @@
 
 package panda.std.stream;
 
+import org.jetbrains.annotations.Nullable;
+import panda.std.Option;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -25,6 +27,7 @@ final class TakeWhileSpliterator<T> implements Spliterator<T> {
     private final Spliterator<T> source;
     private final Predicate<T> condition;
     private boolean conditionHolds;
+    private @Nullable T holdValue;
 
     TakeWhileSpliterator(Spliterator<T> source, Predicate<T> condition) {
         this.source = source;
@@ -34,12 +37,13 @@ final class TakeWhileSpliterator<T> implements Spliterator<T> {
 
     @Override
     public boolean tryAdvance(Consumer<? super T> action) {
-        return conditionHolds && source.tryAdvance((e) -> {
-            if (condition.test(e)) {
-                action.accept(e);
+        return conditionHolds && source.tryAdvance((element) -> {
+            if (condition.test(element)) {
+                action.accept(element);
              }
             else {
                 conditionHolds = false;
+                holdValue = element;
             }
         });
     }
@@ -57,6 +61,10 @@ final class TakeWhileSpliterator<T> implements Spliterator<T> {
     @Override
     public int characteristics() {
         return 0;
+    }
+
+    public Option<T> getHoldValue() {
+        return Option.of(holdValue);
     }
 
 }
