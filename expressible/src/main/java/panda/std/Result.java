@@ -158,20 +158,19 @@ public class Result<VALUE, ERROR>  {
         return this.peek(valueConsumer).onError(errorConsumer);
     }
 
-    public <REQUIRED_ERROR> @NotNull Result<VALUE, REQUIRED_ERROR> projectToValue() {
-        if (isErr()) {
-            throw new IllegalStateException("Cannot project result with error to value");
-        }
-
-        return ok(get());
+    @SuppressWarnings("unchecked")
+    public <REQUIRED_VALUE, REQUIRED_ERROR> @NotNull Result<REQUIRED_VALUE, REQUIRED_ERROR> project() {
+        return (Result<REQUIRED_VALUE, REQUIRED_ERROR>) this;
     }
 
-    public <REQUIRED_VALUE> @NotNull Result<REQUIRED_VALUE, ERROR> projectToError() {
-        if (isOk()) {
-            throw new IllegalStateException("Cannot project result with value to error");
-        }
+    @SuppressWarnings("unchecked")
+    public <REQUIRED_ERROR> @NotNull Result<VALUE, REQUIRED_ERROR> projectToValue() {
+        return (Result<VALUE, REQUIRED_ERROR>) this;
+    }
 
-        return error(getError());
+    @SuppressWarnings("unchecked")
+    public <REQUIRED_VALUE> @NotNull Result<REQUIRED_VALUE, ERROR> projectToError() {
+        return (Result<REQUIRED_VALUE, ERROR>) this;
     }
 
     public @NotNull Result<VALUE, ERROR> orElse(@NotNull Function<@NotNull ERROR, @NotNull Result<VALUE, ERROR>> orElse) {
