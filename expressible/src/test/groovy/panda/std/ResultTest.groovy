@@ -174,8 +174,6 @@ final class ResultTest {
 
     @Test
     void 'should project value of error' () {
-        assertThrows(IllegalStateException.class, { ok('value').projectToError() })
-
         assertDoesNotThrow({
             //noinspection UnnecessaryQualifiedReference
             Result<String, String> expected = Result<Object, String>.error('error').projectToError()
