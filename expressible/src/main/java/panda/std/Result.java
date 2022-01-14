@@ -144,6 +144,10 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? valueMerge.apply(get()) : errorMerge.apply(getError());
     }
 
+    public boolean matches(Predicate<VALUE> condition) {
+        return isOk() && condition.test(value);
+    }
+
     public <MAPPED_VALUE> @NotNull Result<MAPPED_VALUE, ERROR> is(@NotNull Class<MAPPED_VALUE> type, @NotNull Function<@NotNull VALUE, @NotNull ERROR> errorSupplier) {
         return this
                 .filter(type::isInstance, errorSupplier)
