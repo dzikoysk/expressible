@@ -19,6 +19,6 @@ fun <VALUE, ERROR> Sequence<Result<out VALUE, ERROR>>.firstOrErrors(): Result<ou
         .firstSuccessOr { Result.error(collection) }
 }
 
-internal fun <ERROR : Exception> Result<*, ERROR>.orElseThrow() {
+fun <ERROR : Exception> Result<*, ERROR>.orElseThrow() {
     orElseThrow { it }
 }
