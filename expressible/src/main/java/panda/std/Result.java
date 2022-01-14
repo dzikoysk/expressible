@@ -59,16 +59,16 @@ public class Result<VALUE, ERROR>  {
         return new Result<>(value, null);
     }
 
-    public static <ERROR> @NotNull Result<Unit, ERROR> ok() {
-        return new Result<>(Unit.UNIT, null);
+    public static <ERROR> @NotNull Result<Blank, ERROR> ok() {
+        return new Result<>(Blank.BLANK, null);
     }
 
     public static <VALUE, ERROR> @NotNull Result<VALUE, ERROR> error(@NotNull ERROR err) {
         return new Result<>(null, err);
     }
 
-    public static <VALUE> @NotNull Result<VALUE, Unit> error() {
-        return new Result<>(null, Unit.UNIT);
+    public static <VALUE> @NotNull Result<VALUE, Blank> error() {
+        return new Result<>(null, Blank.BLANK);
     }
 
     public static <VALUE, ERROR> @NotNull Result<VALUE, ERROR> when(boolean condition, @NotNull Supplier<@NotNull VALUE> value, @NotNull Supplier<@NotNull ERROR> err) {
@@ -110,7 +110,7 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? ok(function.apply(get())) : projectToError();
     }
 
-    public @NotNull Result<Unit, ERROR> mapToUnit() {
+    public @NotNull Result<Blank, ERROR> mapToBlank() {
         return isOk() ? ok() : projectToError();
     }
 

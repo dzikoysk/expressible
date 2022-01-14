@@ -1,6 +1,7 @@
 package panda.std
 
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.Unit
 
 fun <T> T.letIf(condition: Boolean, block: (T) -> T) =
     if (condition) block(this) else this
