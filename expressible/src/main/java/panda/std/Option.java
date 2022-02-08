@@ -16,6 +16,7 @@
 
 package panda.std;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import panda.std.function.ThrowingSupplier;
 import panda.std.reactive.Completable;
@@ -55,8 +56,8 @@ public class Option<T> implements Iterable<T>, Serializable {
         return Option.of(Blank.BLANK);
     }
 
-    public static <T> Option<T> of(@Nullable T value) {
-        return value != null? new Option<>(value) : none();
+    public static <T> Option<@NotNull T> of(@Nullable T value) {
+        return value != null ? new Option<>(value) : none();
     }
 
     @SuppressWarnings({ "OptionalUsedAsFieldOrParameterType" })
