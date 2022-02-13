@@ -79,7 +79,6 @@ public class Result<VALUE, ERROR>  {
         return condition ? ok(value) : error(err);
     }
 
-    @SuppressWarnings("unchecked")
     public static <VALUE, ERROR extends Throwable> @NotNull Result<VALUE, ERROR> attempt(
             @NotNull Class<? extends ERROR> exceptionType,
             @NotNull ThrowingSupplier<@NotNull VALUE, @NotNull ERROR> supplier
@@ -88,6 +87,7 @@ public class Result<VALUE, ERROR>  {
             return Result.ok(supplier.get());
         } catch (Throwable throwable) {
             if (exceptionType.isAssignableFrom(throwable.getClass())) {
+                //noinspection unchecked
                 return Result.error((ERROR) throwable);
             }
 

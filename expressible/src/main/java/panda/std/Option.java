@@ -108,7 +108,11 @@ public class Option<T> implements Iterable<T>, Serializable {
             return false;
         }
 
-        return Objects.equals(value, ((Option<?>) to).value);
+        return contentEquals(((Option<?>) to).value);
+    }
+
+    public boolean contentEquals(@Nullable Object to) {
+        return Objects.equals(value, to);
     }
 
     @Override
@@ -150,6 +154,10 @@ public class Option<T> implements Iterable<T>, Serializable {
         }
 
         return Option.none();
+    }
+
+    public boolean is(Predicate<T> predicate) {
+        return isDefined() && predicate.test(value);
     }
 
     public <S> Option<S> is(Class<S> type) {
@@ -206,7 +214,12 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() ? value : supplier.get();
     }
 
+    @Deprecated
     public @Nullable T getOrNull() {
+        return value;
+    }
+
+    public @Nullable T orNull() {
         return value;
     }
 

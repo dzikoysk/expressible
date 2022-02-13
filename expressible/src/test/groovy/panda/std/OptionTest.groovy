@@ -126,7 +126,7 @@ final class OptionTest {
 
     @Test
     void 'should return a value or null' () {
-        assertNull none().getOrNull()
+        assertNull none().orNull()
     }
 
     @Test
@@ -145,7 +145,7 @@ final class OptionTest {
     @Test
     void 'should be convertable to stream' () {
         assertEquals 10, of("10").toJavaStream().mapToInt(value -> Integer.parseInt(value)).findAny().orElse(-1)
-        assertArrayEquals new String[0], Option.<String> none().toStream().toArray({ length -> new String[length] } as IntFunction)
+        assertArrayEquals new String[0], none().toStream().toArray({ length -> new String[length] } as IntFunction)
     }
 
     @Test
@@ -156,7 +156,7 @@ final class OptionTest {
     @Test
     void 'should return the same predefined empty option' () {
         assertSame none(), none()
-        assertNull none().getOrNull()
+        assertNull none().orNull()
     }
 
     @Test
