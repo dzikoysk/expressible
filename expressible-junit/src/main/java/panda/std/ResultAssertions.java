@@ -7,7 +7,9 @@ import static panda.std.Result.ok;
 
 public final class ResultAssertions {
 
-    public static <VALUE> VALUE assertOk(Result<VALUE, ?> result) {
+    private ResultAssertions() {}
+
+    public static <VALUE> VALUE assertOk(Result<? extends VALUE, ?> result) {
         if (result.isErr()) {
             fail("Expected success, but result errored with: <" + result.getError() + ">");
         }
@@ -15,7 +17,7 @@ public final class ResultAssertions {
         return result.get();
     }
 
-    public static <VALUE> void assertOk(VALUE value, Result<VALUE, ?> result) {
+    public static <VALUE> void assertOk(VALUE value, Result<? extends VALUE, ?> result) {
         assertOk(result);
         assertEquals(ok(value), result);
     }

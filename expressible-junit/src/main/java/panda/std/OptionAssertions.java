@@ -6,12 +6,15 @@ import static panda.std.Option.of;
 
 public final class OptionAssertions {
 
+    private OptionAssertions() {}
+
     public static void assertIsDefined(Option<?> option) {
         option.onEmpty(() -> fail("Option is empty"));
     }
 
-    public static <VALUE> void assertOptionEquals(VALUE value, Option<VALUE> option) {
-        assertEquals(of(value), option);
+    public static <VALUE> void assertOptionEquals(VALUE value, Option<? extends VALUE> option) {
+        assertIsDefined(option);
+        assertEquals(value, option.get());
     }
 
     public static void assertEmpty(Option<?> option) {

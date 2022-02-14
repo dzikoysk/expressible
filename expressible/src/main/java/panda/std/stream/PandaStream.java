@@ -20,6 +20,7 @@ import panda.std.Option;
 import panda.std.Pair;
 import panda.std.Result;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -48,12 +49,17 @@ import java.util.stream.StreamSupport;
  *
  * @param <T>
  */
-public class PandaStream<T> {
+public class PandaStream<T> implements AutoCloseable {
 
     private Stream<T> stream;
 
     private PandaStream(Stream<T> stream) {
         this.stream = stream;
+    }
+
+    @Override
+    public void close() {
+        stream.close();
     }
 
     public <R> PandaStream<R> stream(Function<Stream<T>, Stream<R>> function) {
@@ -131,6 +137,27 @@ public class PandaStream<T> {
         return findIterating(predicate)
                 .map(Result::<PandaStream<T>, E> error)
                 .orElseGet(Result.ok(this));
+    }
+
+    /**
+     * Find first element in stream or return all failures.
+     * The size of list with errors may be equal to number of all elements in stream,
+     * so it shouldn't be used with large datasets.
+     *
+     * @param searchFunction search function may return success (matched element, terminates stream) or failure (to continue searching).
+     * @param <R> type of matched element
+     * @param <E> type of failures
+     * @return result with matched element or list of failures
+     */
+    public <R, E> Result<R, List<E>> search(Function<T, Result<R, E>> searchFunction) {
+        List<E> errors = new ArrayList<>();
+
+        return this
+                .map(value -> searchFunction.apply(value).onError(errors::add))
+                .filter(Result::isOk)
+                .head()
+                .map(Result::<List<E>> projectToValue)
+                .orElseGet(() -> Result.error(errors));
     }
 
     public PandaStream<T> distinct() {

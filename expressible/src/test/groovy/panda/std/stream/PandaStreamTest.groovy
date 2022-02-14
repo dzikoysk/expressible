@@ -19,6 +19,7 @@ package panda.std.stream
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
 import panda.std.Pair
+import panda.std.Result
 
 import java.util.function.IntFunction
 import java.util.function.Predicate
@@ -141,6 +142,17 @@ class PandaStreamTest {
     @Test
     void empty() {
         assertTrue PandaStream.empty().toList().isEmpty()
+    }
+
+    @Test
+    void search() {
+        def success = PandaStream.of("a", "b", "c").search(element -> Result.when(element == "b", element, element))
+        assertTrue(success.isOk())
+        assertEquals("b", success.get())
+
+        def error = PandaStream.of("a", "b", "c").search(element -> Result.when(element == "d", element, element))
+        assertTrue(error.isErr())
+        assertEquals(["a", "b", "c"], error.getError())
     }
 
 }
