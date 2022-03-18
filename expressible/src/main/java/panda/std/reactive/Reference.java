@@ -84,6 +84,12 @@ public class Reference<V> implements Publisher<Reference<V>, V> {
         return this;
     }
 
+    public <R> Reference<R> computed(Function<V, R> recalculateFunction) {
+        Reference<R> computed = new Reference<>(recalculateFunction.apply(get()));
+        subscribe(value -> computed.set(recalculateFunction.apply(value)));
+        return computed;
+    }
+
     public Option<V> toOption() {
         return Option.of(get());
     }
@@ -105,6 +111,12 @@ public class Reference<V> implements Publisher<Reference<V>, V> {
             this.references = references;
         }
 
+        public <T> @NotNull Reference<T> computed(Supplier<T> recalculateFunction) {
+            Reference<T> computed = reference(recalculateFunction.get());
+            references.forEach(reference -> reference.subscribe(newValue -> computed.set(recalculateFunction.get())));
+            return computed;
+        }
+
         public static Dependencies dependencies(List<Reference<?>> references) {
             return new Dependencies(references);
         }
@@ -116,9 +128,7 @@ public class Reference<V> implements Publisher<Reference<V>, V> {
     }
 
     public static <T> @NotNull Reference<T> computed(Dependencies dependencies, Supplier<T> recalculateFunction) {
-        Reference<T> computed = reference(recalculateFunction.get());
-        dependencies.references.forEach(reference -> reference.subscribe(newValue -> computed.set(recalculateFunction.get())));
-        return computed;
+        return dependencies.computed(recalculateFunction);
     }
 
 }
