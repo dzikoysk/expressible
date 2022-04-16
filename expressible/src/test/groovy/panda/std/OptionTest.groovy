@@ -231,4 +231,9 @@ final class OptionTest {
         assertNotEquals different.hashCode(), base.hashCode()
     }
 
+    @Test
+    void 'should associate 2 optional values into a pair'() {
+        assertEquals(Pair.of("a", "b"), of("a").associateWith({ of("b") }).get())
+    }
+
 }

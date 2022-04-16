@@ -141,6 +141,10 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() ? function.apply(value) : Option.none();
     }
 
+    public <R> Option<Pair<T, R>> associateWith(Function<T, Option<R>> supplier) {
+        return flatMap(a -> supplier.apply(a).map(b -> new Pair<>(a, b)));
+    }
+
     @SafeVarargs
     public final <R> Option<R> match(Case<T, R>... cases) {
         return match(Arrays.asList(cases));

@@ -36,6 +36,14 @@ public class Pair<A, B> {
         return Triple.of(first, second, third);
     }
 
+    public <R> Pair<R, B> withFirst(R newValue) {
+        return new Pair<>(newValue, second);
+    }
+
+    public <R> Pair<A, R> withSecond(R newValue) {
+        return new Pair<>(first, newValue);
+    }
+
     public A getFirst() {
         return first;
     }
