@@ -133,7 +133,7 @@ public class PandaStream<T> implements AutoCloseable {
         return with(stream.filter(obj -> !predicate.test(obj)));
     }
 
-    public <E> Result<PandaStream<T>, E> filterToResult(Function<T, Option<E>> predicate) {
+    public <E> Result<PandaStream<T>, E> filterToResult(Function<? super T, Option<E>> predicate) {
         return findIterating(predicate)
                 .map(Result::<PandaStream<T>, E> error)
                 .orElseGet(Result.ok(this));
@@ -213,7 +213,7 @@ public class PandaStream<T> implements AutoCloseable {
         }));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "UnusedReturnValue" })
     private static <R, E extends Throwable> R throwException(Throwable throwable) throws E {
         throw (E) throwable;
     }
@@ -233,7 +233,7 @@ public class PandaStream<T> implements AutoCloseable {
                 .orElseGet(Result.ok(this));
     }
 
-    public <R> Option<R> findIterating(Function<T, Option<R>> predicate) {
+    public <R> Option<R> findIterating(Function<? super T, Option<R>> predicate) {
         Iterator<T> iterator = duplicate().iterator();
 
         while (iterator.hasNext()) {
