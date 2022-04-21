@@ -133,6 +133,14 @@ public class PandaStream<T> implements AutoCloseable {
         return with(stream.filter(obj -> !predicate.test(obj)));
     }
 
+    public <R> PandaStream<R> flatFilter(Function<T, Iterable<R>> function, Predicate<R> predicate) {
+        return this.flatMap(function).filter(predicate);
+    }
+
+    public <R> PandaStream<R> flatFilterNot(Function<T, Iterable<R>> function, Predicate<R> predicate) {
+        return this.flatMap(function).filterNot(predicate);
+    }
+
     public <E> Result<PandaStream<T>, E> filterToResult(Function<? super T, Option<E>> predicate) {
         return findIterating(predicate)
                 .map(Result::<PandaStream<T>, E> error)

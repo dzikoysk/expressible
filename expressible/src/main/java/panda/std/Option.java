@@ -133,6 +133,14 @@ public class Option<T> implements Iterable<T>, Serializable {
         return filter(value -> !predicate.test(value));
     }
 
+    public <R> Option<R> flatFilter(Function<T, Option<R>> function, Predicate<R> predicate) {
+        return this.flatMap(function).filter(predicate);
+    }
+
+    public <R> Option<R> flatFilterNot(Function<T, Option<R>> function, Predicate<R> predicate) {
+        return this.flatMap(function).filterNot(predicate);
+    }
+
     public <R> Option<R> map(Function<T, R> function) {
         return isDefined() ? Option.of(function.apply(value)) : Option.none();
     }
