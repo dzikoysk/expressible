@@ -178,12 +178,10 @@ public class Option<T> implements Iterable<T>, Serializable {
         return this;
     }
 
-    public Option<T> peekIf(Consumer<T> consumer, Predicate<T> predicate) {
-        if (isDefined() && predicate.test(value)) {
-            consumer.accept(value);
-        }
-
-        return this;
+    public Option<T> peekIf(Predicate<T> predicate, Consumer<T> consumer) {
+        return peek(value -> {
+            if (predicate.test(value)) consumer.accept(value);
+        });
     }
 
     public Option<T> onEmpty(Runnable runnable) {
