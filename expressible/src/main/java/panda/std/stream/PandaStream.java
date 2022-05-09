@@ -172,6 +172,10 @@ public class PandaStream<T> implements AutoCloseable {
         return with(stream.sorted(comparator));
     }
 
+    public PandaStream<T> skip(long n) {
+        return with(stream.skip(n));
+    }
+
     public Option<T> find(Predicate<T> predicate) {
         return filter(predicate).head();
     }
