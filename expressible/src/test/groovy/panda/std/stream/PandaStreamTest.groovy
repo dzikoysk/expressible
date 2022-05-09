@@ -90,6 +90,13 @@ class PandaStreamTest {
     }
 
     @Test
+    void skip() {
+        assertEquals 2L, PandaStream.of(VALUES)
+                .skip(1L)
+                .count()
+    }
+
+    @Test
     void find() {
         assertTrue PandaStream.of(VALUES)
                 .find({ value -> value == "2" } as Predicate)
