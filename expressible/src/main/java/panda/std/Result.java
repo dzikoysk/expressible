@@ -110,8 +110,17 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? ok(function.apply(get())) : projectToError();
     }
 
+    @Deprecated
     public @NotNull Result<Blank, ERROR> mapToBlank() {
+        return blank();
+    }
+
+    public @NotNull Result<Blank, ERROR> blank() {
         return isOk() ? ok() : projectToError();
+    }
+
+    public @NotNull Result<VALUE, Blank> blankError() {
+        return isErr() ? error() : projectToValue();
     }
 
     public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> mapErr(@NotNull Function<@NotNull ERROR, @NotNull MAPPED_ERROR> function) {
