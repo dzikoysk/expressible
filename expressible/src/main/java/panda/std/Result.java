@@ -114,6 +114,10 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? ok() : projectToError();
     }
 
+    public @NotNull Result<VALUE, Blank> mapErrToBlank() {
+        return isErr() ? error() : projectToValue();
+    }
+
     public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> mapErr(@NotNull Function<@NotNull ERROR, @NotNull MAPPED_ERROR> function) {
         return isOk() ? projectToValue() : error(function.apply(getError()));
     }
