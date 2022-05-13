@@ -12,6 +12,10 @@ fun <ERROR> Result<*, ERROR>.mapToUnit(): Result<Unit, ERROR> =
 fun <ERROR> ok(): Result<Unit, ERROR> =
     Result.ok(Unit)
 
+@Deprecated("Inconsistent API method", ReplaceWith("Result.orThrow()"))
 fun <ERROR : Exception> Result<*, ERROR>.orElseThrow() {
-    orElseThrow { it }
+    orThrow { it }
 }
+
+fun <VALUE, ERROR : Exception> Result<VALUE, ERROR>.orThrow(): VALUE =
+    orThrow { it }

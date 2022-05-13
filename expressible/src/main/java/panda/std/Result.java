@@ -189,12 +189,17 @@ public class Result<VALUE, ERROR>  {
         return isOk() ? get() : orElse.apply(getError());
     }
 
-    public <T extends Exception> @NotNull VALUE orElseThrow(@NotNull ThrowingFunction<@NotNull ERROR, @NotNull T, @NotNull T> consumer) throws T {
+    public <T extends Exception> @NotNull VALUE orThrow(@NotNull ThrowingFunction<@NotNull ERROR, @NotNull T, @NotNull T> consumer) throws T {
         if (isOk()) {
             return get();
         }
 
         throw consumer.apply(getError());
+    }
+
+    @Deprecated
+    public <T extends Exception> @NotNull VALUE orElseThrow(@NotNull ThrowingFunction<@NotNull ERROR, @NotNull T, @NotNull T> consumer) throws T {
+        return orThrow(consumer);
     }
 
     public @NotNull Result<VALUE, ERROR> peek(@NotNull Consumer<@NotNull VALUE> consumer) {
