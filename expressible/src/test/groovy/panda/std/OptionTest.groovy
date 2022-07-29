@@ -177,9 +177,9 @@ final class OptionTest {
 
     @Test
     void 'should catch exception in case of failure' () {
-        assertTrue Option.attempt(Throwable.class, { new Object() }).isDefined()
-        assertTrue Option.attempt(RuntimeException.class, { throw new RuntimeException() } as ThrowingSupplier).isEmpty()
-        assertThrows AttemptFailedException.class, { Option.attempt(IllegalAccessException.class, { throw new RuntimeException("Gotcha") }) }
+        assertTrue Option.supplyThrowing(Throwable.class, { new Object() }).isDefined()
+        assertTrue Option.supplyThrowing(RuntimeException.class, { throw new RuntimeException() } as ThrowingSupplier).isEmpty()
+        assertThrows AttemptFailedException.class, { Option.supplyThrowing(IllegalAccessException.class, { throw new RuntimeException("Gotcha") }) }
     }
 
     @Test

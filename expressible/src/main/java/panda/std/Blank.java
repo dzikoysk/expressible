@@ -9,6 +9,10 @@ public final class Blank {
 
     public Blank() {}
 
+    public Void toVoid() {
+        return voidness();
+    }
+
     @Override
     public int hashCode() {
         return 0;
@@ -17,6 +21,10 @@ public final class Blank {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Blank;
+    }
+
+    public static Void voidness() {
+        return null;
     }
 
 }

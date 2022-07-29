@@ -18,10 +18,12 @@ package panda.std;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import panda.std.function.ThrowingRunnable;
 import panda.std.function.ThrowingSupplier;
 import panda.std.reactive.Completable;
 import panda.std.stream.PandaStream;
 import panda.std.collection.SingletonIterator;
+import sun.tools.jconsole.Plotter.Unit;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -85,7 +87,23 @@ public class Option<T> implements Iterable<T>, Serializable {
         return condition ? supplier.get() : none();
     }
 
+    @Deprecated
     public static <T, E extends Throwable> Option<T> attempt(Class<E> throwableType, ThrowingSupplier<T, E> supplier) throws AttemptFailedException {
+        return supplyThrowing(throwableType, supplier);
+    }
+
+    public static Option<Blank> runThrowing(ThrowingRunnable<Exception> runnable) throws AttemptFailedException {
+        return supplyThrowing(() -> {
+            runnable.run();
+            return Blank.BLANK;
+        });
+    }
+
+    public static <T> Option<T> supplyThrowing(ThrowingSupplier<T, Exception> supplier) throws AttemptFailedException {
+        return supplyThrowing(Exception.class, supplier);
+    }
+
+    public static <T, E extends Throwable> Option<T> supplyThrowing(Class<E> throwableType, ThrowingSupplier<T, E> supplier) throws AttemptFailedException {
         try {
             return of(supplier.get());
         } catch (Throwable throwable) {
