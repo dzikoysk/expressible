@@ -23,7 +23,6 @@ import panda.std.function.ThrowingSupplier;
 import panda.std.reactive.Completable;
 import panda.std.stream.PandaStream;
 import panda.std.collection.SingletonIterator;
-import sun.tools.jconsole.Plotter.Unit;
 
 import java.io.Serializable;
 import java.util.Arrays;
