@@ -34,13 +34,13 @@ class StreamUtilsTest {
     }
 
     @Test
-    fun findFirst() {
+    fun `find first`() {
         assertEquals(2, StreamUtils.findFirst(collection) { it == 2 }
             .orElse(-1))
     }
 
     @Test
-    fun sumLongs() {
+    fun `sum longs`() {
         assertEquals(10, StreamUtils.sumLongs(listOf(5L, 5L)) { it })
     }
 

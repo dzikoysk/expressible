@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 class ReversedIterableTest {
 
     @Test
-    fun nextShouldMoveToTheNextElementInOrderFromTheBackAndReturnIt() {
+    fun `next should move to the next element in order from the back & return it`() {
         val reversedIterable = ReversedIterable(listOf("a", "b", "c"))
         val iterator = reversedIterable.iterator()
 

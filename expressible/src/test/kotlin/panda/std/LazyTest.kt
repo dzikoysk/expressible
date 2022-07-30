@@ -26,21 +26,21 @@ class LazyTest {
     private val lazy = Lazy<Any> { Object() }
 
     @Test
-    fun shouldBeInitializedAfterFirstGet() {
+    fun `should be initialized after first get`() {
         assertFalse(lazy.isInitialized)
         lazy.get()
         assertTrue(lazy.isInitialized)
     }
 
     @Test
-    fun shouldReturnTheSameValueEveryTime() {
+    fun `should return the same value every time`() {
         val firstGet = lazy.get()
         val secondGet = lazy.get()
         assertSame(firstGet, secondGet)
     }
 
     @Test
-    fun shouldExecuteRunnableOnlyOnce() {
+    fun `should execute runnable only once`() {
         var status = false
         val lazy = Lazy.ofRunnable { status = !status }
         lazy.get()
@@ -49,7 +49,7 @@ class LazyTest {
     }
 
     @Test
-    fun shouldBeInitializedInstantlyIfValueIsGiven() {
+    fun `should be initialized instantly if value is given`() {
         assertTrue(Lazy("value").isInitialized)
     }
 

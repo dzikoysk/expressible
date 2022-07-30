@@ -26,7 +26,7 @@ class QuadTest {
     private val quad = Quad.of("test", "test", "test", "test")
 
     @Test
-    fun shouldKeepOrderOfAssociatedValues() {
+    fun `should keep order of associated values`() {
         assertEquals("test", quad.first)
         assertEquals("test", quad.second)
         assertEquals("test", quad.third)
@@ -34,13 +34,13 @@ class QuadTest {
     }
 
     @Test
-    fun shouldDisplayFormattedValues() {
+    fun `should display formatted values`() {
         assertEquals("['test', 'test', 'test', 'test']", quad.toString())
     }
 
     @Test
     @SuppressWarnings("ChangeToOperator")
-    fun shouldSupportEqualsAndHashcode() {
+    fun `should support equals & hashcode`() {
         assertEquals(quad, quad)
         assertFalse(quad.equals(null))
         assertFalse(quad.equals(Object()))

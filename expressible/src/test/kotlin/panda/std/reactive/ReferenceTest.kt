@@ -10,7 +10,7 @@ import panda.std.reactive.Reference.reference
 class ReferenceTest {
 
     @Test
-    fun shouldUpdateComputedValue() {
+    fun `should update computed value`() {
         val base = reference(1)
         val computed = base.computed { it.toString() }
         assertEquals("1", computed.get())

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 class ThrowingFunctionTest {
 
     @Test
-    fun shouldRepresentThrowingFunctionWithExceptionHandlerAsAStandardFunction() {
+    fun `should represent throwing function with exception handler as a standard function`() {
         val data = listOf("1", "b", "2")
         val parseFunction: (String) -> Int = { it.toInt() }
         val errorHandler: (Exception) -> Int = { -1 }
@@ -36,7 +36,7 @@ class ThrowingFunctionTest {
     }
 
     @Test
-    fun shouldReturnTheSameValueThroughTheIdentifyFunction() {
+    fun `should return the same value through the identify function`() {
         val value = Object()
         assertEquals(value, ThrowingFunction.identity<Any, Exception>().apply(value))
     }

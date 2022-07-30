@@ -26,24 +26,24 @@ class PairTest {
     private val pair = Pair.of("test", "test")
 
     @Test
-    fun shouldKeepOrderOfAssociatedValues() {
+    fun `should keep order of associated values`() {
         assertEquals("test", pair.getFirst())
         assertEquals("test", pair.getSecond())
     }
 
     @Test
-    fun shouldCreateProperTripleAfterAddingAValue() {
+    fun `should create proper triple after adding a value`() {
         assertEquals(Triple.of("test", "test", "test"), pair.add("test"))
     }
 
     @Test
-    fun shouldDisplayFormattedValues() {
+    fun `should display formatted values`() {
         assertEquals("['test', 'test']", pair.toString())
     }
 
     @Test
     @SuppressWarnings("ChangeToOperator")
-    fun shouldSupportEqualsAndHashcode() {
+    fun `should support equals & hashcode`() {
         assertEquals(pair, pair)
         assertFalse(pair.equals(null))
         assertFalse(pair.equals(Object()))

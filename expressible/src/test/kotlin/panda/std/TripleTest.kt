@@ -26,25 +26,25 @@ class TripleTest {
     private val triple = Triple.of("test", "test", "test")
 
     @Test
-    fun shouldKeepOrderOfAssociatedValues() {
+    fun `should keep order of associated values`() {
         assertEquals("test", triple.first)
         assertEquals("test", triple.second)
         assertEquals("test", triple.third)
     }
 
     @Test
-    fun shouldCreateProperQuadAfterAddingAValue() {
+    fun `should create proper quad after adding a value`() {
         assertEquals(Quad.of("test", "test", "test", "test"), triple.add("test"))
     }
 
     @Test
-    fun shouldDisplayFormattedValues() {
+    fun `should display formatted values`() {
         assertEquals("['test', 'test', 'test']", triple.toString())
     }
 
     @Test
     @SuppressWarnings("ChangeToOperator")
-    fun shouldSupportEqualsAndHashcode() {
+    fun `should support equals & hashcode`() {
         assertEquals(triple, triple)
         assertFalse(triple.equals(null))
         assertFalse(triple.equals(Object()))

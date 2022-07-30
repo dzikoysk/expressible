@@ -62,7 +62,7 @@ class PandaStreamTest {
     }
 
     @Test
-    fun flatMap() {
+    fun `flat map`() {
         assertArrayEquals(numbers, PandaStream.of(values)
                 .flatMap {
                     it.chars()
@@ -109,14 +109,14 @@ class PandaStreamTest {
     }
 
     @Test
-    fun takeWhile() {
+    fun `take while`() {
         assertArrayEquals(arrayOf(1, 2), PandaStream.of(1, 2, 3, 4, 5)
             .takeWhile { it  < 3 }
             .toArray { arrayOfNulls<Int>(it) })
     }
 
     @Test
-    fun toMap() {
+    fun `to map`() {
         val map = PandaStream.of(values)
             .toMapByPair { panda.std.Pair(it, it.toInt()) }
 
@@ -126,7 +126,7 @@ class PandaStreamTest {
     }
 
     @Test
-    fun toStream() {
+    fun `to stream`() {
         assertArrayEquals(numbers, PandaStream.of(values)
                 .map { it.toInt() }
                 .toStream()

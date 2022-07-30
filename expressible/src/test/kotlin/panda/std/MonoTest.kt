@@ -26,23 +26,23 @@ class MonoTest {
     private val mono = Mono.of("test")
 
     @Test
-    fun shouldKeepOrderOfAssociatedValues() {
+    fun `should keep order of associated values`() {
         assertEquals("test", mono.getFirst())
     }
 
     @Test
-    fun shouldCreateProperPairAfterAddingAValue() {
+    fun `should create proper pair after adding a value`() {
         assertEquals(Pair.of("test", "test"), mono.add("test"))
     }
 
     @Test
-    fun shouldDisplayFormattedValues() {
+    fun `should display formatted values`() {
         assertEquals("['test']", mono.toString())
     }
 
     @Test
     @SuppressWarnings("ChangeToOperator")
-    fun shouldImplementEqualsAndHashcode() {
+    fun `should implement equals & hashcode`() {
         assertEquals(mono, mono)
         assertFalse(mono.equals(null))
         assertFalse(mono.equals(Object()))

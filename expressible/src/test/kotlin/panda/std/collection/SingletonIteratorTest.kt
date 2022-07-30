@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 class SingletonIteratorTest {
 
     @Test
-    fun nextShouldReturnSingletonElement() {
+    fun `next should return singleton element`() {
         val reversedIterable = SingletonIterator("a")
 
         assertTrue(reversedIterable.hasNext())

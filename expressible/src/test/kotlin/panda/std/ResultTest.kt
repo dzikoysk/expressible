@@ -32,22 +32,22 @@ import kotlin.math.abs
 class ResultTest {
 
     @Test
-    fun shouldMapValue() {
+    fun `should map value`() {
         assertEquals(7, ok<String, Any>("7").map { it.toInt() }.get())
     }
 
     @Test
-    fun shouldReturnAlternativeResultIfErrored() {
+    fun `should return alternative result if errored`() {
         assertEquals(7, error<Int, Any>(-1).orElse { ok(7) }.get())
     }
 
     @Test
-    fun shouldReturnAlternativeValueIfErrored() {
+    fun `should return alternative value if errored`() {
         assertEquals(7, error<Int, Any>(-1).orElseGet { 7 })
     }
 
     @Test
-    fun shouldCatchExceptionInCaseOfFailure() {
+    fun `should catch exception in case of failure`() {
         val result = Result.supplyThrowing<String, Throwable>(Exception::class.java) { throw RuntimeException() }.mapErr { "error" }
         assertTrue(result.isErr)
         assertEquals("error", result.error)
@@ -61,37 +61,37 @@ class ResultTest {
     }
 
     @Test
-    fun shouldEvaluateErrorClosureIfErrored() {
+    fun `should evaluate error closure if errored`() {
         val integer = AtomicInteger(-1)
         error<Int, Int>(integer.get()).onError { err: Int -> integer.set(abs(err)) }
         assertEquals(1, integer.get())
     }
 
     @Test
-    fun shouldReturnProperOkStatus() {
+    fun `should return proper ok status`() {
         assertTrue(ok<String, Any>("ok").isOk)
         assertFalse(error<String, Any>("err").isOk)
     }
 
     @Test
-    fun shouldReturnResultValue() {
+    fun `should return result value`() {
         assertEquals("value", ok<String, Any>("value").get())
     }
 
     @Test
-    fun shouldReturnProperErrorStatus() {
+    fun `should return proper error status`() {
         assertTrue(error<String, Any>("err").isErr)
         assertFalse(ok<String, Any>("ok").isErr)
     }
 
     @Test
-    fun shouldReturnErrorValue() {
+    fun `should return error value`() {
         assertEquals("err", error<String, Any>("err").error)
     }
 
     @Test
     @SuppressWarnings("ChangeToOperator")
-    fun shouldImplementEqualsAndHashcode() {
+    fun `should implement equals & hashcode`() {
         val base = ok<String, Any>("test")
         assertEquals(base, base)
         assertEquals(base.hashCode(), base.hashCode())
@@ -108,35 +108,35 @@ class ResultTest {
     }
 
     @Test
-    fun shouldThrowExceptionDuringAnAttemptOfGettingValueFromResultRepresentingError() {
+    fun `should throw exception during an attempt of getting value from result representing error`() {
         assertThrows(NoSuchElementException::class.java) { error<String, Any>("Error").get() }
     }
 
     @Test
-    fun shouldReturnValueOrErrorAsAnyValue() {
+    fun `should return value or error as any value`() {
         assertEquals("any", ok<String, Any>("any").getAnyAs())
         assertEquals("any", error<String, Any>("any").getAnyAs())
     }
 
     @Test
-    fun shouldMapResultToOption() {
+    fun `should map result to option`() {
         assertEquals(Option.of("value"), ok<String, Any>("value").toOption())
         assertEquals(Option.none<Any>(), error<String, Any>("error").toOption())
     }
 
     @Test
-    fun shouldReturnNullForOrNullInCaseOfError() {
+    fun `should return null for or null in case of error`() {
         assertNull(error<String, Any>("error").orNull())
     }
 
     @Test
-    fun shouldDisplayFormattedContentThroughToString() {
+    fun `should display formatted content through to string`() {
         assertEquals("Result{VALUE=value}", ok<String, Any>("value").toString())
         assertEquals("Result{ERR=error}", error<String, Any>("error").toString())
     }
 
     @Test
-    fun shouldExecuteClosureIfOk()  {
+    fun `should execute closure if ok`()  {
         var status = false
 
         error<Boolean, Any>(this).peek { status = true }
@@ -147,34 +147,34 @@ class ResultTest {
     }
 
     @Test
-    fun shouldThrowIfRequestedIfResultContainsError() {
+    fun `should throw if requested if result contains error`() {
         assertDoesNotThrow { ok<String, Any>("value").orThrow { IllegalStateException() } }
         assertThrows(IllegalStateException::class.java) { error<String, Any>("error").orThrow { IllegalStateException() }}
     }
 
     @Test
-    fun shouldFilterValueAndReturnErrorIfNeeded() {
+    fun `should filter value & return error if needed`() {
         assertEquals("error", ok<String, Any>("value").filter( { false }, { "error" }).error)
         assertEquals("error", ok<String, Any>("value").filterNot( { true }, { "error" }).error)
     }
 
     @Test
-    fun swapTest() {
+    fun `swap test`() {
         assertEquals("test", ok<String, Any>("test").swap().error)
     }
 
     @Test
-    fun shouldFlatMapResultValue() {
+    fun `should flat map result value`() {
         assertEquals("flat", ok<String, Any>("flat").flatMap { ok(it) }.get())
     }
 
     @Test
-    fun shouldMapError() {
+    fun `should map error`() {
         assertEquals("mapped", error<String, Any>("error").mapErr { "mapped" }.error)
     }
 
     @Test
-    fun shouldProjectValueOfError() {
+    fun `should project value of error`() {
         assertDoesNotThrow {
             val expected = error<String, Any>("error").projectToError<Any>()
             assertEquals("error", expected.error)

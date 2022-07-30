@@ -9,47 +9,47 @@ import org.junit.jupiter.api.Assertions.assertTrue
 class CompletableTest {
 
     @Test
-    fun shouldBeNotReadyIfNotCompleted() {
+    fun `should be not ready if not completed`() {
         assertTrue(Completable.create<Boolean>().isUnprepared)
     }
 
     @Test
-    fun shouldBeReadyIfCompleted() {
+    fun `should be ready if completed`() {
         assertTrue(Completable.completed("value").isReady)
     }
 
     @Test
-    fun shouldReturnValueOrThrowIfNotCompleted () {
+    fun `should return value or throw if not completed`() {
         assertEquals("value", Completable.completed("value").get())
         assertThrows(IllegalStateException::class.java) { Completable.create<Exception>().get() }
     }
 
     @Test
-    fun shouldCompleteOption() {
+    fun `should complete option`() {
         assertEquals("value", Completable.create<String>().complete("value").complete("").get())
     }
 
     @Test
-    fun shouldReturnValueOrThrowGivenErrorIfNotCompleted() {
+    fun `should return value or throw given error if not completed`() {
         assertThrows(RuntimeException::class.java) { Completable.create<Exception>().orThrow { RuntimeException() } }
         assertEquals("value", Completable.completed("value").orThrow { RuntimeException() })
     }
 
     @Test
-    fun shouldSubscribeCompletableAndReceiveProvidedValue() {
+    fun `should subscribe completable & receive provided value`() {
         var status = false
         Completable.create<Boolean>().subscribe { status = it }.complete(true)
         assertTrue(status)
     }
 
     @Test
-    fun shouldProperlyExecuteAssociatedStages() {
+    fun `should properly execute associated stages`() {
         var status = false
         val completable = Completable.create<String>()
 
         completable
             .thenApply { it.toBoolean() }
-            .thenCompose { value -> Completable.completed(!value) }
+            .thenCompose { Completable.completed(!it) }
             .then { status = it }
 
         completable.complete("false")
@@ -57,7 +57,7 @@ class CompletableTest {
     }
 
     @Test
-    fun shouldBeConvertableToFuture() {
+    fun `should be convertable to future`() {
         assertEquals("value", Completable.completed("value").toFuture().get())
     }
 
