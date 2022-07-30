@@ -16,21 +16,23 @@
 
 package panda.std.collection
 
-import groovy.transform.CompileStatic
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-import static org.junit.jupiter.api.Assertions.*
-
-@CompileStatic
-final class SingletonIteratorTest {
+class ReversedIterableTest {
 
     @Test
-    void next_should_return_singleton_element() {
-        SingletonIterator<String> reversedIterable = new SingletonIterator<>("a")
+    fun nextShouldMoveToTheNextElementInOrderFromTheBackAndReturnIt() {
+        val reversedIterable = ReversedIterable(listOf("a", "b", "c"))
+        val iterator = reversedIterable.iterator()
 
-        assertTrue reversedIterable.hasNext()
-        assertEquals "a", reversedIterable.next()
-        assertFalse(reversedIterable.hasNext())
+        assertTrue(iterator.hasNext())
+        assertEquals("c", iterator.next())
+        assertEquals("b", iterator.next())
+        assertEquals("a", iterator.next())
+        assertFalse(iterator.hasNext())
     }
 
 }
