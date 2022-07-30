@@ -176,7 +176,6 @@ class ResultTest {
     @Test
     fun shouldProjectValueOfError() {
         assertDoesNotThrow {
-            //noinspection UnnecessaryQualifiedReference
             val expected = error<String, Any>("error").projectToError<Any>()
             assertEquals("error", expected.error)
         }
