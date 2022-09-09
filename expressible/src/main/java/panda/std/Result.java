@@ -272,16 +272,16 @@ public class Result<VALUE, ERROR>  {
     }
 
     public VALUE get() {
-        if (value == null) {
-            throw new NoSuchElementException("No value present");
+        if (isErr()) {
+            throw new IllegalStateException("Result contains error - Cannot get the success value");
         }
 
         return value;
     }
 
     public ERROR getError() {
-        if (error == null) {
-            throw new NoSuchElementException("No error present");
+        if (isOk()) {
+            throw new IllegalStateException("Result completed successfully - Cannot get the error value");
         }
 
         return error;
