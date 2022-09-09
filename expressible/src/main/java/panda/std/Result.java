@@ -273,7 +273,7 @@ public class Result<VALUE, ERROR>  {
 
     public VALUE get() {
         if (isErr()) {
-            throw new IllegalStateException("No value present");
+            throw new IllegalStateException("Result contains error - Cannot get the success value");
         }
 
         return value;
@@ -281,7 +281,7 @@ public class Result<VALUE, ERROR>  {
 
     public ERROR getError() {
         if (isOk()) {
-            throw new IllegalStateException("No error present");
+            throw new IllegalStateException("Result completed successfully - Cannot get the error value");
         }
 
         return error;
