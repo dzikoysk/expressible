@@ -109,7 +109,7 @@ class ResultTest {
 
     @Test
     fun `should throw exception during an attempt of getting value from result representing error`() {
-        assertThrows(NoSuchElementException::class.java) { error<String, Any>("Error").get() }
+        assertThrows(IllegalStateException::class.java) { error<String, Any>("Error").get() }
     }
 
     @Test
