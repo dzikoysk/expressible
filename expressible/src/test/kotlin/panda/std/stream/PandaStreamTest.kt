@@ -17,7 +17,6 @@
 package panda.std.stream
 
 import org.junit.jupiter.api.Test
-import java.util.stream.Collectors
 import java.util.stream.Stream
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -54,6 +53,7 @@ class PandaStreamTest {
                 .toArray { arrayOfNulls<Int>(it) })
     }
 
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     @Test
     fun `is`() {
         assertArrayEquals(numbers, PandaStream.of(1, null, 2, "3", 3, "4")
@@ -63,16 +63,17 @@ class PandaStreamTest {
 
     @Test
     fun `flat map`() {
-        assertArrayEquals(numbers, PandaStream.of(values)
-                .flatMap {
-                    it.chars()
-                        .mapToObj { c -> c }
-                        .collect(Collectors.toList())
-                }
-            .map { it.toChar() }
-                .map { it.toString().toInt() }
+        assertArrayEquals(
+            arrayOf(
+                11, 22, 33,
+                111, 222, 333
+            ),
+            PandaStream.of(values)
+                .flatMap { listOf("$it$it", "$it$it$it") }
+                .map { it.toInt() }
                 .sorted()
-                .toArray { arrayOfNulls<Int>(it) })
+                .toArray { arrayOfNulls<Int>(it) }
+        )
     }
 
     @Test

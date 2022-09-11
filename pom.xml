@@ -5,7 +5,9 @@
     <groupId>org.panda-lang</groupId>
     <artifactId>expressible-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
+
+    <name>expressible-parent</name>
 
     <modules>
         <module>expressible</module>
@@ -14,8 +16,8 @@
     </modules>
 
     <properties>
-        <expressible.version>1.2.0</expressible.version>
-        <kotlin.version>1.5.31</kotlin.version>
+        <expressible.version>1.2.1</expressible.version>
+        <kotlin.version>1.7.10</kotlin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,18 +42,18 @@
             <dependency>
                 <groupId>org.panda-lang</groupId>
                 <artifactId>expressible</artifactId>
-                <version>1.2.0</version>
+                <version>1.2.1</version>
             </dependency>
             <dependency>
                 <groupId>org.panda-lang</groupId>
                 <artifactId>expressible-kt</artifactId>
-                <version>1.2.0</version>
+                <version>1.2.1</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jetbrains.kotlinx</groupId>
                 <artifactId>kotlinx-coroutines-core</artifactId>
-                <version>1.5.2</version>
+                <version>1.6.4</version>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -65,12 +67,6 @@
             </dependency>
 
             <!-- Tests -->
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy</artifactId>
-                <version>3.0.8</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
