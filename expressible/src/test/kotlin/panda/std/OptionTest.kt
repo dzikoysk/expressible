@@ -35,8 +35,8 @@ import kotlin.NoSuchElementException
 class OptionTest {
 
     @Test
-    fun `should not present none`() {
-        val none = none<Void>()
+    fun `should be empty`() {
+        val none = none<String>()
 
         assertTrue(none.isEmpty)
         assertThrows(NoSuchElementException::class.java) { none.get() }
