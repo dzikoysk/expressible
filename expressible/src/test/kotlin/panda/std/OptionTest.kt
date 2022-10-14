@@ -85,6 +85,12 @@ class OptionTest {
     }
 
     @Test
+    fun `should cast if instanceof`() {
+        assertTrue(of(50).`is`(Integer::class.java).isPresent)
+        assertFalse(of(50).`is`(String::class.java).isPresent)
+    }
+
+    @Test
     fun `should execute closure if value is present`() {
         var status = false
 
