@@ -85,7 +85,7 @@ class OptionTest {
     }
 
     @Test
-    fun `should cast if instanceof`() {
+    fun `should cast if given type`() {
         assertTrue(of(50).`is`(Integer::class.java).isPresent)
         assertFalse(of(50).`is`(String::class.java).isPresent)
     }
