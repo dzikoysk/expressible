@@ -62,6 +62,13 @@ class PandaStreamTest {
     }
 
     @Test
+    fun `is primitive`() {
+        assertArrayEquals(numbers, PandaStream.of(1, null, 2, "3", 3, "4")
+            .`is`(Int::class.java)
+            .toArray { arrayOfNulls<Int>(it) })
+    }
+
+    @Test
     fun `flat map`() {
         assertArrayEquals(
             arrayOf(

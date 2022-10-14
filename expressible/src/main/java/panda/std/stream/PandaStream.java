@@ -120,6 +120,10 @@ public class PandaStream<T> implements AutoCloseable {
     }
 
     public <S> PandaStream<S> is(Class<S> type) {
+        if (type.isPrimitive()) {
+            type = StreamUtils.convertPrimitiveToWrapper(type);
+        }
+
         return this
                 .filter(type::isInstance)
                 .map(type::cast);
