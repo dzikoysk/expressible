@@ -17,7 +17,6 @@
 package panda.std
 
 import java.util.Optional
-import java.util.function.Predicate
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -34,6 +33,22 @@ import panda.std.Option.of
 import kotlin.NoSuchElementException
 
 class OptionTest {
+
+    @Test
+    fun `should not present none`() {
+        val none = none<Void>()
+
+        assertTrue(none.isEmpty)
+        assertThrows(NoSuchElementException::class.java) { none.get() }
+    }
+
+    @Test
+    fun `should present blank`() {
+        val blank = Option.blank()
+
+        assertTrue(blank.isPresent)
+        assertEquals(Blank.BLANK, blank.get())
+    }
 
     @Test
     fun `should filter value`() {
