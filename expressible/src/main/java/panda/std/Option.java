@@ -191,12 +191,6 @@ public class Option<T> implements Iterable<T>, Serializable {
                 .map(type::cast);
     }
 
-    public <S> Option<S> isNot(Class<S> type) {
-        return this
-                .filterNot(type::isInstance)
-                .map(type::cast);
-    }
-
     public Option<T> peek(Consumer<T> consumer) {
         if (isDefined()) {
             consumer.accept(value);
