@@ -74,6 +74,17 @@ class OptionTest {
     }
 
     @Test
+    fun `should test if defined`() {
+        assertTrue(of(3).`is`{ it == 3 })
+        assertFalse(of(5).`is`{ it == 3 })
+        assertFalse(none<Int>().`is`{ it == 3 })
+
+        assertTrue(of(3).isNot(){ it == 5 })
+        assertFalse(of(5).isNot(){ it == 5 })
+        assertFalse(none<Int>().isNot(){ it == 5 })
+    }
+
+    @Test
     fun `should execute closure if value is present`() {
         var status = false
 
