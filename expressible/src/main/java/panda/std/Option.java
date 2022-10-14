@@ -181,9 +181,19 @@ public class Option<T> implements Iterable<T>, Serializable {
         return isDefined() && predicate.test(value);
     }
 
+    public boolean isNot(Predicate<T> predicate) {
+        return isDefined() && !predicate.test(value);
+    }
+
     public <S> Option<S> is(Class<S> type) {
         return this
                 .filter(type::isInstance)
+                .map(type::cast);
+    }
+
+    public <S> Option<S> isNot(Class<S> type) {
+        return this
+                .filterNot(type::isInstance)
                 .map(type::cast);
     }
 
