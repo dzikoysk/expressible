@@ -17,6 +17,9 @@
 package panda.std.stream;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -28,7 +31,30 @@ import java.util.stream.StreamSupport;
 
 public final class StreamUtils {
 
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER;
+
+    static {
+        Map<Class<?>, Class<?>> primitiveToWrapper = new HashMap<>();
+
+        primitiveToWrapper.put(boolean.class, Boolean.class);
+        primitiveToWrapper.put(byte.class, Byte.class);
+        primitiveToWrapper.put(char.class, Character.class);
+        primitiveToWrapper.put(short.class, Short.class);
+        primitiveToWrapper.put(int.class, Integer.class);
+        primitiveToWrapper.put(long.class, Long.class);
+        primitiveToWrapper.put(float.class, Float.class);
+        primitiveToWrapper.put(double.class, Double.class);
+        primitiveToWrapper.put(void.class, Void.class);
+
+        PRIMITIVE_TO_WRAPPER = Collections.unmodifiableMap(primitiveToWrapper);
+    }
+
     private StreamUtils() { }
+
+    @SuppressWarnings("unchecked")
+    static <T> Class<T> convertPrimitiveToWrapper(Class<T> type) {
+        return (Class<T>) PRIMITIVE_TO_WRAPPER.getOrDefault(type, type);
+    }
 
     public static <T> long sum(Iterable<T> iterable, ToLongFunction<? super T> function) {
         return stream(iterable).mapToLong(function).sum();
