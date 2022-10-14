@@ -177,6 +177,29 @@ class OptionTest {
     }
 
     @Test
+    fun `should create option based on condition and value`() {
+        assertTrue(Option.flatWhen(true, of(Object())).isDefined)
+        assertFalse(Option.flatWhen(false, of(Object())).isDefined)
+        assertFalse(Option.flatWhen(true, none<Any>()).isDefined)
+        assertFalse(Option.flatWhen(false, none<Any>()).isDefined)
+    }
+
+    @Test
+    fun `should create option based on condition and supplied value`() {
+        assertTrue(Option.flatWhen(true) { of(Object()) }.isDefined)
+        assertFalse(Option.flatWhen(false) { of(Object()) }.isDefined)
+        assertFalse(Option.flatWhen(true) { none<Any>() }.isDefined)
+        assertFalse(Option.flatWhen(false) { none<Any>() }.isDefined)
+    }
+
+    @Test
+    fun `should catch exception in case of failure and return option blank`() {
+        assertTrue(Option.runThrowing { Object() }.isDefined)
+        assertTrue(Option.runThrowing { throw RuntimeException() }.isEmpty)
+        assertThrows(AttemptFailedException::class.java) { Option.runThrowing { throw Throwable("Gotcha") }}
+    }
+
+    @Test
     fun `should catch exception in case of failure`() {
         assertTrue(Option.supplyThrowing(Throwable::class.java) { Object() }.isDefined)
         assertTrue(Option.supplyThrowing(RuntimeException::class.java) { throw RuntimeException() }.isEmpty)
