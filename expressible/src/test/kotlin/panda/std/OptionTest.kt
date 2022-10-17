@@ -17,7 +17,6 @@
 package panda.std
 
 import java.util.Optional
-import java.util.function.Predicate
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -34,6 +33,22 @@ import panda.std.Option.of
 import kotlin.NoSuchElementException
 
 class OptionTest {
+
+    @Test
+    fun `should be empty`() {
+        val none = none<String>()
+
+        assertTrue(none.isEmpty)
+        assertThrows(NoSuchElementException::class.java) { none.get() }
+    }
+
+    @Test
+    fun `should present blank`() {
+        val blank = Option.blank()
+
+        assertTrue(blank.isPresent)
+        assertEquals(Blank.BLANK, blank.get())
+    }
 
     @Test
     fun `should filter value`() {
@@ -194,6 +209,29 @@ class OptionTest {
     fun `should create option based on condition`() {
         assertTrue(Option.`when`(true, Object()).isDefined)
         assertFalse(Option.`when`(false, Object()).isDefined)
+    }
+
+    @Test
+    fun `should create option based on condition and value`() {
+        assertTrue(Option.flatWhen(true, of(Object())).isDefined)
+        assertFalse(Option.flatWhen(false, of(Object())).isDefined)
+        assertFalse(Option.flatWhen(true, none<Any>()).isDefined)
+        assertFalse(Option.flatWhen(false, none<Any>()).isDefined)
+    }
+
+    @Test
+    fun `should create option based on condition and supplied value`() {
+        assertTrue(Option.flatWhen(true) { of(Object()) }.isDefined)
+        assertFalse(Option.flatWhen(false) { of(Object()) }.isDefined)
+        assertFalse(Option.flatWhen(true) { none<Any>() }.isDefined)
+        assertFalse(Option.flatWhen(false) { none<Any>() }.isDefined)
+    }
+
+    @Test
+    fun `should catch exception in case of failure and return option blank`() {
+        assertTrue(Option.runThrowing { Object() }.isDefined)
+        assertTrue(Option.runThrowing { throw RuntimeException() }.isEmpty)
+        assertThrows(AttemptFailedException::class.java) { Option.runThrowing { throw Throwable("Gotcha") }}
     }
 
     @Test
