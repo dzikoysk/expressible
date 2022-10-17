@@ -88,10 +88,7 @@ class OptionTest {
     fun `should check if given type`() {
         assertTrue(of(50).`is`(Integer::class.java).isPresent)
         assertFalse(of(50).`is`(String::class.java).isPresent)
-    }
 
-    @Test
-    fun `should check if not given type`() {
         assertTrue(of(50).isNot(String::class.java).isPresent)
         assertFalse(of(50).isNot(Integer::class.java).isPresent)
     }
