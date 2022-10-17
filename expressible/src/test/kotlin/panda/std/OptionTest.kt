@@ -75,19 +75,25 @@ class OptionTest {
 
     @Test
     fun `should test if defined`() {
-        assertTrue(of(3).`is`{ it == 3 })
-        assertFalse(of(5).`is`{ it == 3 })
-        assertFalse(none<Int>().`is`{ it == 3 })
+        assertTrue(of(3).`is` { it == 3 })
+        assertFalse(of(5).`is` { it == 3 })
+        assertFalse(none<Int>().`is` { it == 3 })
 
-        assertTrue(of(3).isNot(){ it == 5 })
-        assertFalse(of(5).isNot(){ it == 5 })
-        assertFalse(none<Int>().isNot(){ it == 5 })
+        assertTrue(of(3).isNot { it == 5 })
+        assertFalse(of(5).isNot { it == 5 })
+        assertFalse(none<Int>().isNot { it == 5 })
     }
 
     @Test
-    fun `should cast if given type`() {
+    fun `should check if given type`() {
         assertTrue(of(50).`is`(Integer::class.java).isPresent)
         assertFalse(of(50).`is`(String::class.java).isPresent)
+    }
+
+    @Test
+    fun `should check if not given type`() {
+        assertTrue(of(50).isNot(String::class.java).isPresent)
+        assertFalse(of(50).isNot(Integer::class.java).isPresent)
     }
 
     @Test
