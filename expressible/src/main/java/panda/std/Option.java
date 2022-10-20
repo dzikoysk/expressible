@@ -191,7 +191,7 @@ public class Option<T> implements Iterable<T>, Serializable {
                 .map(type::cast);
     }
 
-    public <S> Option<T> isNot(Class<S> type) {
+    public Option<T> isNot(Class<?> type) {
         return this.filterNot(type::isInstance);
     }
 
