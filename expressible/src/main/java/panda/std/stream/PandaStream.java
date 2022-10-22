@@ -129,6 +129,14 @@ public class PandaStream<T> implements AutoCloseable {
                 .map(type::cast);
     }
 
+    public PandaStream<T> isNot(Class<?> type) {
+        if (type.isPrimitive()) {
+            type = StreamUtils.convertPrimitiveToWrapper(type);
+        }
+
+        return this.filterNot(type::isInstance);
+    }
+
     public PandaStream<T> filter(Predicate<T> predicate) {
         return with(stream.filter(predicate));
     }
