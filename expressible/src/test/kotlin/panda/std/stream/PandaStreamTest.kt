@@ -59,6 +59,10 @@ class PandaStreamTest {
         assertArrayEquals(numbers, PandaStream.of(1, null, 2, "3", 3, "4")
                 .`is`(Integer::class.java)
                 .toArray { arrayOfNulls<Integer>(it) })
+
+        assertArrayEquals(arrayOf(null, "3", "4"), PandaStream.of(1, null, 2, "3", 3, "4")
+                .isNot(Integer::class.java)
+                .toArray { arrayOfNulls<String>(it) })
     }
 
     @Test
