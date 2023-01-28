@@ -2,7 +2,6 @@ package panda.std;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static panda.std.Option.of;
 
 public final class OptionAssertions {
 
