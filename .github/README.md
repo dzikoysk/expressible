@@ -1,4 +1,4 @@
-# Expressible [![CI](https://github.com/panda-lang/expressible/actions/workflows/maven.yml/badge.svg)](https://github.com/panda-lang/expressible/actions/workflows/maven.yml) [![codecov](https://codecov.io/gh/panda-lang/expressible/branch/main/graph/badge.svg?token=LI1PAPD6NM)](https://codecov.io/gh/panda-lang/expressible)
+# Expressible [![CI](https://github.com/panda-lang/expressible/actions/workflows/gradle.yml/badge.svg)](https://github.com/panda-lang/expressible/actions/workflows/gradle.yml) [![codecov](https://codecov.io/gh/panda-lang/expressible/branch/main/graph/badge.svg?token=LI1PAPD6NM)](https://codecov.io/gh/panda-lang/expressible)
 Dependency free utility library for Java & Kotlin, dedicated for functional codebases that require enhanced response handling.
 Express yourself with inspired by Rust, Kotlin and Vavr wrappers, to provide better API using this tiny library.
 
