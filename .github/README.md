@@ -29,9 +29,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.panda-lang:expressible:1.2.2") // Core library
-    implementation("org.panda-lang:expressible-kt:1.2.2") // Kotlin extensions
-    testImplementation("org.panda-lang:expressible-junit:1.2.2") // JUnit extensions
+    implementation("org.panda-lang:expressible:1.3.0") // Core library
+    implementation("org.panda-lang:expressible-kt:1.3.0") // Kotlin extensions
+    testImplementation("org.panda-lang:expressible-junit:1.3.0") // JUnit extensions
 }
 ```
 
