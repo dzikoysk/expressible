@@ -24,10 +24,6 @@ so you can freely divide functions into smaller pieces and move from non-functio
 <hr>
 
 ```kotlin
-repositories {
-    maven { url = uri("https://repo.panda-lang.org/releases") }
-}
-
 dependencies {
     implementation("org.panda-lang:expressible:1.3.0") // Core library
     implementation("org.panda-lang:expressible-kt:1.3.0") // Kotlin extensions
