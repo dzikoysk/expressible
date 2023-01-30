@@ -21,6 +21,7 @@ import java.util.stream.Stream
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Timeout
 
 class PandaStreamTest {
 
@@ -96,6 +97,20 @@ class PandaStreamTest {
     }
 
     @Test
+    fun `shuffle has same elements`() {
+        val shuffled = PandaStream.of(values).shuffle().toList()
+
+        assertEquals(values.size, shuffled.size)
+        assertTrue(shuffled.containsAll(values))
+    }
+
+    @Timeout(1)
+    @Test
+    fun `shuffle is shuffling`() {
+        while (PandaStream.of(values).shuffle().toList() == values) {}
+    }
+
+    @Test
     fun skip() {
         assertEquals(2L, PandaStream.of(values)
                 .skip(1L)
@@ -125,6 +140,20 @@ class PandaStreamTest {
         assertArrayEquals(arrayOf(1, 2), PandaStream.of(1, 2, 3, 4, 5)
             .takeWhile { it  < 3 }
             .toArray { arrayOfNulls<Int>(it) })
+    }
+
+    @Test
+    fun `to shuffled list has same elements`() {
+        val shuffled = PandaStream.of(values).toShuffledList()
+
+        assertEquals(values.size, shuffled.size)
+        assertTrue(shuffled.containsAll(values))
+    }
+
+    @Timeout(1)
+    @Test
+    fun `to shuffled list is shuffled`() {
+        while (PandaStream.of(values).toShuffledList() == values) {}
     }
 
     @Test
