@@ -16,8 +16,8 @@
 
 package panda.std.stream;
 
-import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import panda.std.Option;
 import panda.std.Pair;
 import panda.std.Result;
@@ -187,11 +187,7 @@ public class PandaStream<T> implements AutoCloseable {
     }
 
     public PandaStream<T> shuffle() {
-        return this.sorted(new RandomComparator<>());
-    }
-
-    public PandaStream<T> shuffle(Random random) {
-        return this.sorted(new RandomComparator<>(random));
+        return PandaStream.of(this.toShuffledList());
     }
 
     public PandaStream<T> skip(long n) {
@@ -295,11 +291,12 @@ public class PandaStream<T> implements AutoCloseable {
         return stream.collect(Collectors.toList());
     }
 
+    public List<T> toShuffledList(Random random) {
+        return stream.collect(PandaCollectors.shufflingCollector(random));
+    }
+
     public List<T> toShuffledList() {
-        return stream.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-            Collections.shuffle(list);
-            return list;
-        }));
+        return toShuffledList(ThreadLocalRandom.current());
     }
 
     public Set<T> toSet() {
