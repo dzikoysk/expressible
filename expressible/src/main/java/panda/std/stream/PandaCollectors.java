@@ -12,9 +12,7 @@ public final class PandaCollectors {
     private PandaCollectors() {}
 
     public static <T> BinaryOperator<T> throwingMerger() {
-        return (u, v) -> {
-            throw new IllegalStateException(String.format("Duplicate key %s", u));
-        };
+        return (u, v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
     }
 
     public static <T> Collector<T, Object, List<T>> shufflingCollector(Random random) {
