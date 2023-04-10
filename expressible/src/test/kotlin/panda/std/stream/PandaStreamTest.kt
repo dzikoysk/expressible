@@ -181,30 +181,28 @@ class PandaStreamTest {
         assertEquals(stream, PandaStream.of(stream).toStream())
     }
 
-        @Test
+    @Test
     fun `flat of streams`() {
-        val streamOne = Stream.of(1, 2, 3)
-        val streamTwo = Stream.of(3, 4, 5)
         val resultList = listOf(1, 2, 3, 3, 4, 5)
 
         // streams
         val streamOfStreams = PandaStream.flatOf(Stream.of(
-            streamOne,
-            streamTwo
+            Stream.of(1, 2, 3),
+            Stream.of(3, 4, 5)
         )).toList()
         assertEquals(resultList, streamOfStreams)
 
         // collections
         val collectionOfStreams = PandaStream.flatOf(listOf(
-            streamOne,
-            streamTwo
+            Stream.of(1, 2, 3),
+            Stream.of(3, 4, 5)
         )).toList()
         assertEquals(resultList, collectionOfStreams)
 
         // iterables
         val iterableOfStreams = PandaStream.flatOf(listOf(
-            streamOne,
-            streamTwo
+             Stream.of(1, 2, 3),
+            Stream.of(3, 4, 5)
         ).asIterable()).toList()
         assertEquals(resultList, iterableOfStreams)
     }
