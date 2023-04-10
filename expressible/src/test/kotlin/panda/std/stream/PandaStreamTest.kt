@@ -16,10 +16,12 @@
 
 package panda.std.stream
 
-import org.junit.jupiter.api.Assertions.*
+import java.util.stream.Stream
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
-import java.util.stream.Stream
 
 class PandaStreamTest {
 
