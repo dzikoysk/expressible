@@ -16,12 +16,6 @@
 
 package panda.std.stream;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-import panda.std.Option;
-import panda.std.Pair;
-import panda.std.Result;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,7 +24,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -41,6 +37,9 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import panda.std.Option;
+import panda.std.Pair;
+import panda.std.Result;
 
 /**
  * Simple wrapper to combine standard {@link java.util.stream.Stream} API with wrappers like
@@ -342,10 +341,6 @@ public class PandaStream<T> implements AutoCloseable {
     @SafeVarargs
     public static <T> PandaStream<T> of(T... array) {
         return of(Arrays.stream(array));
-    }
-
-    public static <T> PandaStream<T> flatOf(Collection<? extends Iterable<T>> collection) {
-        return of(collection).flatMap(it -> it);
     }
 
     public static <T> PandaStream<T> flatOf(Iterable<? extends Iterable<T>> iterable) {

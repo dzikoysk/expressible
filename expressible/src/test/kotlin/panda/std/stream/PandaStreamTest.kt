@@ -181,28 +181,28 @@ class PandaStreamTest {
 
     @Test
     fun `flat of`() {
-        val collectionOne = listOf(1, 2, 3)
-        val collectionTwo = setOf(3, 4, 5)
+        val testList = listOf(1, 2, 3)
+        val testSet = setOf(3, 4, 5)
         val resultList = listOf(1, 2, 3, 3, 4, 5)
 
         // collection
         val collectionOfIterables = PandaStream.flatOf(listOf(
-            collectionOne,
-            collectionTwo
+            testList,
+            testSet
         )).toList()
         assertEquals(resultList, collectionOfIterables)
 
         // iterable
         val iterableOfIterables = PandaStream.flatOf(listOf(
-            collectionOne,
-            collectionTwo
+            testList,
+            testSet
         ).asIterable()).toList()
         assertEquals(resultList, iterableOfIterables)
 
         // array
         val arrayOfIterables = PandaStream.flatOf(
-            collectionOne,
-            collectionTwo
+            testList,
+            testSet
         ).toList()
         assertEquals(resultList, arrayOfIterables)
     }
