@@ -181,6 +181,62 @@ class PandaStreamTest {
         assertEquals(stream, PandaStream.of(stream).toStream())
     }
 
+        @Test
+    fun `flat of streams`() {
+        val streamOne = Stream.of(1, 2, 3)
+        val streamTwo = Stream.of(3, 4, 5)
+        val resultList = listOf(1, 2, 3, 3, 4, 5)
+
+        // streams
+        val streamOfStreams = PandaStream.flatOf(Stream.of(
+            streamOne,
+            streamTwo
+        )).toList()
+        assertEquals(resultList, streamOfStreams)
+
+        // collections
+        val collectionOfStreams = PandaStream.flatOf(listOf(
+            streamOne,
+            streamTwo
+        )).toList()
+        assertEquals(resultList, collectionOfStreams)
+
+        // iterables
+        val iterableOfStreams = PandaStream.flatOf(listOf(
+            streamOne,
+            streamTwo
+        ).asIterable()).toList()
+        assertEquals(resultList, iterableOfStreams)
+    }
+
+    @Test
+    fun `flat of collections`() {
+        val collectionOne = listOf(1, 2, 3)
+        val collectionTwo = setOf(3, 4, 5)
+        val resultList = listOf(1, 2, 3, 3, 4, 5)
+
+        // streams
+        val streamOfCollections = PandaStream.flatOfCollections(Stream.of(
+            collectionOne,
+            collectionTwo
+        )).toList()
+        assertEquals(resultList, streamOfCollections)
+
+        // collections
+        val collectionOfCollections = PandaStream.flatOfCollections(listOf(
+            collectionOne,
+            collectionTwo
+        )).toList()
+        assertEquals(resultList, collectionOfCollections)
+
+        // iterables
+        val iterableOfCollections = PandaStream.flatOfCollections(listOf(
+            collectionOne,
+            collectionTwo
+        ).asIterable()).toList()
+        assertEquals(resultList, iterableOfCollections)
+    }
+
     @Test
     fun empty() {
         assertTrue(PandaStream.empty<Any>().toList().isEmpty())
