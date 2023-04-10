@@ -187,7 +187,6 @@ class PandaStreamTest {
         val collectionTwo = setOf(3, 4, 5)
         val resultList = listOf(1, 2, 3, 3, 4, 5)
 
-
         // collections
         val collectionOfIterables = PandaStream.flatOf(listOf(
             collectionOne,
