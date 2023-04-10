@@ -353,7 +353,7 @@ public class PandaStream<T> implements AutoCloseable {
     }
 
     @SafeVarargs
-    public static <T> PandaStream<T> flatOf(Collection<T>... array) {
+    public static <T> PandaStream<T> flatOf(Iterable<T>... array) {
         return flatOf(Arrays.asList(array));
     }
 
