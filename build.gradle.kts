@@ -1,8 +1,11 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `java-library`
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    id("org.jetbrains.kotlin.jvm") version "1.8.20"
 }
 
 description = "Expressible | Parent"
@@ -11,6 +14,7 @@ allprojects {
     apply(plugin = "java-library")
     apply(plugin = "signing")
     apply(plugin = "maven-publish")
+    apply(plugin = "kotlin")
 
     group = "org.panda-lang"
     version = "1.3.1"
@@ -88,10 +92,23 @@ allprojects {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8"
+            languageVersion = "1.8"
+            freeCompilerArgs = listOf(
+                "-Xjvm-default=all", // For generating default methods in interfaces
+                // "-Xcontext-receivers"
+            )
+        }
+    }
 }
 
 subprojects {
     dependencies {
+        testImplementation(kotlin("stdlib-jdk8"))
+
         val junit = "5.8.2"
         testImplementation("org.junit.jupiter:junit-jupiter-params:$junit")
         testImplementation("org.junit.jupiter:junit-jupiter-api:$junit")

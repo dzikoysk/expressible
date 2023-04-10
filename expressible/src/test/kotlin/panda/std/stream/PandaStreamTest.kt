@@ -16,11 +16,11 @@
 
 package panda.std.stream
 
-import org.junit.jupiter.api.Test
 import java.util.stream.Stream
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
 
 class PandaStreamTest {
@@ -179,6 +179,34 @@ class PandaStreamTest {
     fun of() {
         val stream = values.stream()
         assertEquals(stream, PandaStream.of(stream).toStream())
+    }
+
+    @Test
+    fun `flat of`() {
+        val testList = listOf(1, 2, 3)
+        val testSet = setOf(3, 4, 5)
+        val resultList = listOf(1, 2, 3, 3, 4, 5)
+
+        // collection
+        val collectionOfIterables = PandaStream.flatOf(listOf(
+            testList,
+            testSet
+        )).toList()
+        assertEquals(resultList, collectionOfIterables)
+
+        // iterable
+        val iterableOfIterables = PandaStream.flatOf(listOf(
+            testList,
+            testSet
+        ).asIterable()).toList()
+        assertEquals(resultList, iterableOfIterables)
+
+        // array
+        val arrayOfIterables = PandaStream.flatOf(
+            testList,
+            testSet
+        ).toList()
+        assertEquals(resultList, arrayOfIterables)
     }
 
     @Test
