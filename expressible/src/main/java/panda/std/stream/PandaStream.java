@@ -344,28 +344,17 @@ public class PandaStream<T> implements AutoCloseable {
         return of(Arrays.stream(array));
     }
 
-    public static <T> PandaStream<T> flatOf(Stream<? extends Stream<T>> streams) {
-        return new PandaStream<>(streams).flatMapStream(it -> it);
+    public static <T> PandaStream<T> flatOf(Collection<? extends Iterable<T>> collection) {
+        return of(collection).flatMap(it -> it);
     }
 
-    public static <T> PandaStream<T> flatOf(Collection<? extends Stream<T>> streams) {
-        return flatOf(streams.stream());
+    public static <T> PandaStream<T> flatOf(Iterable<? extends Iterable<T>> iterable) {
+        return of(iterable).flatMap(it -> it);
     }
 
-    public static <T> PandaStream<T> flatOf(Iterable<? extends Stream<T>> streams) {
-        return flatOf(StreamSupport.stream(streams.spliterator(), false));
-    }
-
-    public static <T> PandaStream<T> flatOfCollections(Stream<? extends Collection<T>> collections) {
-        return flatOf(collections.map(Collection::stream));
-    }
-
-    public static <T> PandaStream<T> flatOfCollections(Collection<? extends Collection<T>> collections) {
-        return flatOfCollections(collections.stream());
-    }
-
-    public static <T> PandaStream<T> flatOfCollections(Iterable<? extends Collection<T>> collections) {
-        return flatOfCollections(StreamSupport.stream(collections.spliterator(), false));
+    @SafeVarargs
+    public static <T> PandaStream<T> flatOf(Collection<T>... array) {
+        return flatOf(Arrays.asList(array));
     }
 
     public static <T> PandaStream<T> empty() {

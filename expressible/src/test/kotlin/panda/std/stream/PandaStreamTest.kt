@@ -182,57 +182,32 @@ class PandaStreamTest {
     }
 
     @Test
-    fun `flat of streams`() {
-        val resultList = listOf(1, 2, 3, 3, 4, 5)
-
-        // streams
-        val streamOfStreams = PandaStream.flatOf(Stream.of(
-            Stream.of(1, 2, 3),
-            Stream.of(3, 4, 5)
-        )).toList()
-        assertEquals(resultList, streamOfStreams)
-
-        // collections
-        val collectionOfStreams = PandaStream.flatOf(listOf(
-            Stream.of(1, 2, 3),
-            Stream.of(3, 4, 5)
-        )).toList()
-        assertEquals(resultList, collectionOfStreams)
-
-        // iterables
-        val iterableOfStreams = PandaStream.flatOf(listOf(
-             Stream.of(1, 2, 3),
-            Stream.of(3, 4, 5)
-        ).asIterable()).toList()
-        assertEquals(resultList, iterableOfStreams)
-    }
-
-    @Test
-    fun `flat of collections`() {
+    fun `flat of`() {
         val collectionOne = listOf(1, 2, 3)
         val collectionTwo = setOf(3, 4, 5)
         val resultList = listOf(1, 2, 3, 3, 4, 5)
 
-        // streams
-        val streamOfCollections = PandaStream.flatOfCollections(Stream.of(
-            collectionOne,
-            collectionTwo
-        )).toList()
-        assertEquals(resultList, streamOfCollections)
 
         // collections
-        val collectionOfCollections = PandaStream.flatOfCollections(listOf(
+        val collectionOfIterables = PandaStream.flatOf(listOf(
             collectionOne,
             collectionTwo
         )).toList()
-        assertEquals(resultList, collectionOfCollections)
+        assertEquals(resultList, collectionOfIterables)
 
         // iterables
-        val iterableOfCollections = PandaStream.flatOfCollections(listOf(
+        val iterableOfIterables = PandaStream.flatOf(listOf(
             collectionOne,
             collectionTwo
         ).asIterable()).toList()
-        assertEquals(resultList, iterableOfCollections)
+        assertEquals(resultList, iterableOfIterables)
+
+        // array
+        val arrayOfIterables = PandaStream.flatOf(
+            collectionOne,
+            collectionTwo
+        ).toList()
+        assertEquals(resultList, arrayOfIterables)
     }
 
     @Test
