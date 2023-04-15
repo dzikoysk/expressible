@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import panda.std.Result.error
 import panda.std.Result.ok
+import java.lang.IllegalArgumentException
 import kotlin.math.abs
 
 class ResultTest {
@@ -154,8 +155,35 @@ class ResultTest {
 
     @Test
     fun `should filter value & return error if needed`() {
-        assertEquals("error", ok<String, Any>("value").filter( { false }, { "error" }).error)
-        assertEquals("error", ok<String, Any>("value").filterNot( { true }, { "error" }).error)
+        assertEquals("error", ok<String, Any>("value").filter({ false }, { "error" }).error)
+        assertEquals("error", ok<String, Any>("value").filterNot({ true }, { "error" }).error)
+    }
+
+    @Test
+    fun `should filter value & return error if needed using aggregated filters`() {
+        assertEquals(
+            "value",
+            ok<String, Any>("value")
+                .filter {
+                    when {
+                        it != "value" -> "err"
+                        it.startsWith("test") -> "err"
+                        else -> null // ok
+                    }
+                }
+                .get()
+        )
+
+        assertEquals(
+            "value",
+            ok<String, Any>("value")
+                .filterWithThrowing<IllegalArgumentException> {
+                    require(it == "value") { "err" }
+                    require(it.startsWith("v")) { "err" }
+                }
+                .mapFilterError { it.message ?: "err" }
+                .get()
+        )
     }
 
     @Test

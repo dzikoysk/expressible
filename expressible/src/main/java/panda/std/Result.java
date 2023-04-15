@@ -18,11 +18,11 @@ package panda.std;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import panda.std.function.ThrowingConsumer;
 import panda.std.function.ThrowingFunction;
 import panda.std.function.ThrowingRunnable;
 import panda.std.function.ThrowingSupplier;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -184,6 +184,49 @@ public class Result<VALUE, ERROR>  {
 
     public @NotNull Result<VALUE, ERROR> filterNot(@NotNull Predicate<VALUE> predicate, @NotNull Function<VALUE, ERROR> errorSupplier) {
         return filter(value -> !predicate.test(value), errorSupplier);
+    }
+
+    public @NotNull Result<VALUE, ERROR> filter(@NotNull Function<VALUE, @Nullable ERROR> filtersBody) {
+        return flatMap(value -> {
+            ERROR error = filtersBody.apply(value);
+            return error == null ? ok(value) : error(error);
+        });
+    }
+
+    public static class FilteredResult<VALUE, FILTER_ERROR, EXPECTED_ERROR> {
+
+        private final @Nullable Result<VALUE, EXPECTED_ERROR> previousError;
+        private final @Nullable Result<VALUE, FILTER_ERROR> currentResult;
+
+        private FilteredResult(@Nullable Result<VALUE, EXPECTED_ERROR> previousError, @Nullable Result<VALUE, FILTER_ERROR> currentResult) {
+            if (previousError == null && currentResult == null) {
+                throw new IllegalArgumentException("Both previousError and currentResult are null");
+            }
+            this.previousError = previousError;
+            this.currentResult = currentResult;
+        }
+
+        public @NotNull Result<VALUE, EXPECTED_ERROR> mapFilterError(@NotNull Function<FILTER_ERROR, EXPECTED_ERROR> mapper) {
+            return previousError != null
+                    ? previousError
+                    : Objects.requireNonNull(currentResult).mapErr(mapper);
+        }
+
+    }
+
+    public @NotNull <E extends Exception> FilteredResult<VALUE, E, ERROR> filterWithThrowing(@NotNull ThrowingConsumer<VALUE, @NotNull E> filtersBody) {
+        return fold(
+            value -> {
+                try {
+                    filtersBody.accept(value);
+                    return new FilteredResult<>(null, ok(value));
+                } catch (Exception e) {
+                    //noinspection unchecked
+                    return new FilteredResult<>(null, error((E) e));
+                }
+            },
+            error -> new FilteredResult<>(error(error), null)
+        );
     }
 
     public <COMMON> COMMON fold(@NotNull Function<VALUE, COMMON> valueMerge, @NotNull Function<ERROR, COMMON> errorMerge) {
