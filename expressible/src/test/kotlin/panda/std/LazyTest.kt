@@ -53,4 +53,14 @@ class LazyTest {
         assertTrue(Lazy("value").isInitialized)
     }
 
+    @Test
+    fun `should be not initialized after get throws an exception`() {
+        val lazy = Lazy<Any> { throw RuntimeException() }
+        try {
+            lazy.get()
+        } catch (ignored: RuntimeException) {
+        }
+        assertFalse(lazy.isInitialized)
+    }
+
 }

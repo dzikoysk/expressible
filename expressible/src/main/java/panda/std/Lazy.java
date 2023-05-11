@@ -46,8 +46,10 @@ public class Lazy<T> implements Supplier<T> {
             return value;
         }
 
+        this.value = supplier.get();
         this.initialized = true;
-        return (this.value = supplier.get());
+
+        return value;
     }
 
     public boolean isInitialized() {
