@@ -16,9 +16,7 @@
 
 package panda.std
 
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertSame
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class LazyTest {
@@ -54,13 +52,24 @@ class LazyTest {
     }
 
     @Test
-    fun `should be not initialized after get throws an exception`() {
+    fun `should be not failed if value is given`() {
+        assertFalse(Lazy("value").isFailed)
+    }
+
+    @Test
+    fun `should be initialized and failed if exception is thrown`() {
         val lazy = Lazy<Any> { throw RuntimeException() }
-        try {
-            lazy.get()
-        } catch (ignored: RuntimeException) {
-        }
-        assertFalse(lazy.isInitialized)
+
+        assertThrows(AttemptFailedException::class.java) { lazy.get() }
+        assertTrue(lazy.isInitialized)
+        assertTrue(lazy.isFailed)
+    }
+
+    @Test
+    fun `should throw exception if lazy is failed`() {
+        val lazy = Lazy<Any> { throw RuntimeException() }
+        assertThrows(AttemptFailedException::class.java, { lazy.get() }, "Cannot initialize lazy value")
+        assertThrows(AttemptFailedException::class.java, { lazy.get() }, "Lazy value has been already initialized with exception")
     }
 
 }
