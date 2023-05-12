@@ -52,17 +52,17 @@ class LazyTest {
     }
 
     @Test
-    fun `should be not failed if value is given`() {
-        assertFalse(Lazy("value").isFailed)
+    fun `should not fail if value is given`() {
+        assertFalse(Lazy("value").hasFailed())
     }
 
     @Test
-    fun `should be initialized and failed if exception is thrown`() {
+    fun `should be initialized and fail if an exception is thrown`() {
         val lazy = Lazy<Any> { throw RuntimeException() }
 
         assertThrows(AttemptFailedException::class.java) { lazy.get() }
         assertTrue(lazy.isInitialized)
-        assertTrue(lazy.isFailed)
+        assertTrue(lazy.hasFailed())
     }
 
     @Test

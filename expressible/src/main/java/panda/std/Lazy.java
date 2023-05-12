@@ -66,7 +66,7 @@ public class Lazy<T> implements Supplier<T> {
         return initialized;
     }
 
-    public boolean isFailed() {
+    public boolean hasFailed() {
         return exception != null;
     }
 
