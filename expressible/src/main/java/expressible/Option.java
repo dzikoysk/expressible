@@ -23,16 +23,10 @@ import expressible.stream.PandaStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import expressible.function.ThrowingRunnable;
-import expressible.function.ThrowingSupplier;
-import expressible.reactive.Completable;
-import expressible.stream.PandaStream;
-import expressible.collection.SingletonIterator;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -88,11 +82,6 @@ public class Option<T> implements Iterable<T>, Serializable {
 
     public static <T> Option<T> flatWhen(boolean condition, Supplier<Option<T>> supplier) {
         return condition ? supplier.get() : none();
-    }
-
-    @Deprecated
-    public static <T, E extends Throwable> Option<T> attempt(Class<E> throwableType, ThrowingSupplier<T, E> supplier) throws AttemptFailedException {
-        return supplyThrowing(throwableType, supplier);
     }
 
     public static Option<Blank> runThrowing(ThrowingRunnable<Exception> runnable) throws AttemptFailedException {
@@ -242,11 +231,6 @@ public class Option<T> implements Iterable<T>, Serializable {
 
     public T orElseGet(Supplier<T> supplier) {
         return isDefined() ? value : supplier.get();
-    }
-
-    @Deprecated
-    public @Nullable T getOrNull() {
-        return value;
     }
 
     public @Nullable T orNull() {

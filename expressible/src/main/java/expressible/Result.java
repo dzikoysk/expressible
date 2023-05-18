@@ -22,10 +22,6 @@ import expressible.function.ThrowingRunnable;
 import expressible.function.ThrowingSupplier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import expressible.function.ThrowingConsumer;
-import expressible.function.ThrowingFunction;
-import expressible.function.ThrowingRunnable;
-import expressible.function.ThrowingSupplier;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -34,8 +30,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static expressible.Blank.BLANK;
-import static expressible.Blank.voidness;
 import static expressible.Result.State.OK;
 import static expressible.Result.State.ERROR;
 
@@ -62,7 +56,6 @@ public class Result<VALUE, ERROR>  {
         if (value != null && error != null) {
             throw new IllegalStateException("Value and error are not null - Cannot determine state of Result");
         }
-
         this.state = state;
         this.value = value;
         this.error = error;
@@ -104,25 +97,6 @@ public class Result<VALUE, ERROR>  {
             runnable.run();
             return Blank.voidness();
         });
-    }
-
-    /**
-     * @see Result#supplyThrowing(expressible.function.ThrowingSupplier)
-     */
-    @Deprecated
-    public static <VALUE> @NotNull Result<VALUE, Exception> attempt(@NotNull ThrowingSupplier<VALUE, @NotNull Exception> supplier) {
-        return supplyThrowing(Exception.class, supplier);
-    }
-
-    /**
-     * @see Result#supplyThrowing(Class, expressible.function.ThrowingSupplier)
-     */
-    @Deprecated
-    public static <VALUE, ERROR extends Throwable> @NotNull Result<VALUE, ERROR> attempt(
-        @NotNull Class<? extends ERROR> exceptionType,
-        @NotNull ThrowingSupplier<VALUE, @NotNull ERROR> supplier
-    ) throws AttemptFailedException {
-        return supplyThrowing(exceptionType, supplier);
     }
 
     public static <VALUE> @NotNull Result<VALUE, Exception> supplyThrowing(@NotNull ThrowingSupplier<VALUE, @NotNull Exception> supplier) {
@@ -284,14 +258,6 @@ public class Result<VALUE, ERROR>  {
         }
 
         throw consumer.apply(getError());
-    }
-
-    /**
-     * @see Result#orThrow(expressible.function.ThrowingFunction)
-     */
-    @Deprecated
-    public <E extends Exception> @NotNull VALUE orElseThrow(@NotNull ThrowingFunction<ERROR, E, E> consumer) throws E {
-        return orThrow(consumer);
     }
 
     public @NotNull Result<VALUE, ERROR> peek(@NotNull Consumer<VALUE> consumer) {
