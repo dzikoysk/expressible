@@ -16,8 +16,8 @@ allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
 
-    group = "org.panda-lang"
-    version = "1.3.5"
+    group = "com.dzikoysk"
+    version = "2.0.0"
 
     repositories {
         mavenCentral()
