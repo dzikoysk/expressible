@@ -17,7 +17,7 @@ allprojects {
     apply(plugin = "kotlin")
 
     group = "org.panda-lang"
-    version = "1.3.4"
+    version = "1.3.5"
 
     repositories {
         mavenCentral()
