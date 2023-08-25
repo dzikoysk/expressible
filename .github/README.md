@@ -25,9 +25,9 @@ so you can freely divide functions into smaller pieces and move from non-functio
 
 ```kotlin
 dependencies {
-    implementation("org.panda-lang:expressible:1.3.5") // Core library
-    implementation("org.panda-lang:expressible-kt:1.3.5") // Kotlin extensions
-    testImplementation("org.panda-lang:expressible-junit:1.3.5") // JUnit extensions
+    implementation("org.panda-lang:expressible:1.3.6") // Core library
+    implementation("org.panda-lang:expressible-kt:1.3.6") // Kotlin extensions
+    testImplementation("org.panda-lang:expressible-junit:1.3.6") // JUnit extensions
 }
 ```
 

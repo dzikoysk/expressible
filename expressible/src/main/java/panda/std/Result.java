@@ -171,10 +171,9 @@ public class Result<VALUE, ERROR>  {
                 : projectToError();
     }
 
-    public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> flatMapErr(@NotNull Function<@NotNull ERROR, @NotNull Result<? extends VALUE, MAPPED_ERROR>> function) {
-        //noinspection unchecked
+    public <MAPPED_ERROR> @NotNull Result<VALUE, MAPPED_ERROR> flatMapErr(@NotNull Function<@NotNull ERROR, @NotNull Result<VALUE, MAPPED_ERROR>> function) {
         return isErr()
-                ? (Result<VALUE, MAPPED_ERROR>) function.apply(getError())
+                ? function.apply(getError())
                 : projectToValue();
     }
 
